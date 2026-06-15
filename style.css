@@ -162,13 +162,13 @@ span.boldsub {
 	font-weight: 600;
 	font-style: italic;
 }
-span.subblock {
+span.subblock,div.subblock {
 	white-space: nowrap;
 	display: inline-block;
 	background-color: inherit;
 	transition: background-color 1s ease-out;
 }
-span.subblock:hover, a:hover {
+span.subblock:hover,div.subblock:hover, a:hover {
 	background: rgba(142, 215, 237, 1);
 	background: radial-gradient(at center, rgba(142, 215, 237, 1.0), rgba(142, 215, 237, 0));	transition: background-color 0.5s ease-out;
 }
@@ -210,7 +210,7 @@ div.bubble img.D {
 	height: 14px;
 	opacity: 0.5;
 }
-span.subblock:hover div.bubble, div.bubble:hover {
+div.subblock:hover div.bubble, div.bubble:hover {
 	background-color: #666 !important;
 	transition: background-color 0.5s ease-out;
 }
@@ -439,7 +439,7 @@ select.menu, option.menu {
 		line-height: 11px;
 	}
 
-	span.subblock {
+	span.subblock,div.subblock {
 		display: block;
 		margin-bottom: 3px;
 		white-space: normal;
@@ -492,5 +492,4 @@ select.menu, option.menu {
 		border-radius: 3px;
 		padding: 2px;
 	}
-
 }

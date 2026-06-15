@@ -1,14 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 // ================================== PARAMETERS ==================================
-$development_mode = FALSE;
-//$computeURL = "http://localhost".$_SERVER["REQUEST_URI"]."compute.php"; 
-$computeURL = "https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/compute.php"; // compute.php via HTTPS, in the case it is hosted elsewhere
-include "./configs/config.php";
+$development_mode = true;
+$computeURL = "http://localhost".dirname($_SERVER['PHP_SELF'])."/compute.php"; // compute.php delivers JSON stuff
+require "configs/config.php";
 
 
 
 // Functions ===============
-function pretty($number, $decimals) {
+function pretty(float $number, int $decimals):string {
 	$number = number_format($number, $decimals, ".", "&nbsp;");
 	if (strpos($number, '.') === false)
 		return $number;
@@ -18,6 +17,96 @@ function pretty($number, $decimals) {
 function is_private_ip(string $ip): bool {
 	return !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
 }
+
+
+function disguise_curl(string $url):mixed {
+	$curl = curl_init();
+
+	// Setup headers - I used the same headers from Firefox version 2.0.0.6
+	// below was split up because php.net said the line was too long. :/
+	$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
+	$header[0] .= "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+	$header[] = "Cache-Control: max-age=0";
+	$header[] = "Connection: keep-alive";
+	$header[] = "Keep-Alive: 300";
+	$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+	$header[] = "Accept-Language: en-us,en;q=0.5";
+	$header[] = "Pragma: "; // browsers keep this blank.
+
+	curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+	curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+	curl_setopt($curl, CURLOPT_REFERER, 'http://www.google.com');
+	curl_setopt($curl, CURLOPT_ENCODING, 'gzip,deflate');
+	curl_setopt($curl, CURLOPT_AUTOREFERER, true);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+
+	$html = curl_exec($curl); // execute the curl command
+	curl_close($curl); // close the connection
+
+	return $html; // and finally, return $html
+}
+
+// Determine IP in case accessing from behind Cloudflare.
+if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+    $ip = $_SERVER['HTTP_CLIENT_IP'];
+}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+}else{
+    $ip = $_SERVER['REMOTE_ADDR'];
+}
+
+/**
+ * Parse an RFC 9110 Accept-Language header into a sorted array.
+ *
+ * Returns an array of:
+ * [
+ *     ['range' => 'en-US', 'q' => 1.0],
+ *     ['range' => 'en',    'q' => 0.8],
+ *     ...
+ * ]
+ */
+function parse_accept_language(string $header): array{
+	// Split on commas (multiple header lines should already be concatenated)
+	$parts = array_map('trim', explode(',', $header));
+	$parsed = [];
+
+	foreach ($parts as $part) {
+		if ($part === '') continue;
+
+		// Split into language-range and optional parameters
+		$segments = array_map('trim', explode(';', $part));
+
+		$range = strtolower($segments[0]);
+		$q = 1.0; // default per RFC
+
+		// Parse parameters
+		for ($i = 1; $i < count($segments); $i++) {
+			if (stripos($segments[$i], 'q=') === 0) {
+				$value = substr($segments[$i], 2);
+				$q = max(0.0, min(1.0, floatval($value)));
+			}
+		}
+
+		$parsed[] = ['range' => $range, 'q' => $q];
+	}
+
+	// Sort by q DESC, then by specificity DESC (more subtags = more specific)
+	usort($parsed, function ($a, $b) {
+		if ($a['q'] !== $b['q'])
+            return ($a['q'] < $b['q']) ? 1 : -1;
+
+		// Specificity = number of hyphens
+		$aSpec = substr_count($a['range'], '-');
+		$bSpec = substr_count($b['range'], '-');
+
+		return $bSpec <=> $aSpec;
+	});
+
+	return $parsed;
+}
+
 
 
 
@@ -36,7 +125,8 @@ if (isset($_GET["fiat"]) and in_array($_GET["fiat"], array_keys($fiatcurrencies)
 } elseif (!is_private_ip($_SERVER["REMOTE_ADDR"])) { // if public IP is known (that block should be tested, not essential though)
 	// detection of an European country (hence EUR)
 	$Europe = array("AL","AD","AM","AT","AZ","BY","BE","BA","BG","CH","CY","CZ","DE","DK","EE","ES","FR","FI","FO","GB","GE","GI","GR","HR","HU","IE","IS","IT","KZ","LI","LT","LU","LV","MC","MD","ME","MK","MT","NL","NO","PL","PT","RO","RS","RU","SE","SI","SK","SM","TR","UA","VA");
-	$IPAPI = file_get_contents("https://ipapi.co/" . $_SERVER["REMOTE_ADDR"] . "/country/");
+//	$IPAPI = file_get_contents("https://ipapi.co/" . $_SERVER["REMOTE_ADDR"] . "/country/");
+	$IPAPI = disguise_curl("https://ipapi.co/" . $ip . "/country/");
 	if (in_array(strtoupper(trim($IPAPI)), $Europe))
 		$fiat = "EUR";
 } // we should also detect Japan to auto-set JPY, etc.
@@ -54,21 +144,15 @@ $lang = "en"; // default, except if cookie
 
 // Detection through Accept-Language (low priority : smashed by cookie or GET)
 if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) and !isset($_COOKIE["lang"]) and !isset($_GET["lang"])) {
-	$accepted = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
-	preg_match_all('/([a-z]{2})(?:[_-][A-Z]{2})?(?:;q=([\d.]+))?/i', $accepted, $matches, PREG_SET_ORDER);
-	usort($matches, fn($a, $b) => (float)($b[2] ?: 1) <=> (float)($a[2] ?: 1));
-	foreach ($matches as $match) {
-		$code = strtolower(substr($match[1], 0, 2));
-		if (array_key_exists($code, $langnames)) {
-			$lang = $code;
-			break;
-		}
-	}
+	$code = parse_accept_language($_SERVER["HTTP_ACCEPT_LANGUAGE"]);//var_dump($code[0]['range']);die;
+	if (array_key_exists($code[0]['range'], $langnames)) $lang = $code;
 }
+
 // Cookie (medium priority : smashes automatic detection above)
 if (isset($_COOKIE["lang"]) and in_array($_COOKIE["lang"], array_keys($langnames)) and !isset($_GET["lang"])) {
 	$lang = $_COOKIE["lang"];
 }
+
 // GET (high priority : smashes everything above and sets new cookie)
 if (isset($_GET["lang"]) and in_array($_GET["lang"], array_keys($langnames))) {
 	$lang = $_GET["lang"];
@@ -90,13 +174,12 @@ $UItext = json_decode($rawJS, true);
 // we could also modify the link to Dash Docs in the GUI in order to link to the right language
 
 
-
 // Fetch calculated values by compute.php ===============
 $ch = curl_init($computeURL);
 curl_setopt_array($ch, [
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_TIMEOUT => 5,
-	CURLOPT_USERPWD => "username:password", // only for local dev
+//	CURLOPT_USERPWD => "username:password", // only for local dev
 ]);
 $return = curl_exec($ch);
 if ($return === false)
@@ -111,7 +194,6 @@ $USDprice[$fiat] = $data["lastPrices"]["conversion_rates"][$fiat];
 $currentprice[$fiat] = round($data["lastPrices"]["USD"]["current"] * $USDprice[$fiat], 2);
 $past365dprice[$fiat] = round($data["lastPrices"]["USD"]["365d"] * $USDprice[$fiat], 2); // it would be smarter to get *past* USD/fiat price
 $daysago365 = date("jS F Y", $data["lastPrices"]["USD"]["time"]["timestamp"] - (365 * 24 * 60 * 60));
-
 
 // Check if CoinGecko sent the price
 if ((int) $data["lastPrices"]["USD"]["current"] <= 0)
@@ -134,7 +216,7 @@ foreach ($collateralvalue as $type => $stuff) {
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $lang;?>">
 	<head>
 		<title>Dash yield - masternodes &amp; Evonodes earnings</title>
 		<meta charset="utf-8">
@@ -235,14 +317,14 @@ foreach ($collateralvalue as $type => $stuff) {
 			<span class="info">ℹ️</span>
 		</div>
 	</div>
-	<span class="subblock">
+	<div class="subblock">
 		<b><?php echo $UItext["1-masternode"]; ?></b>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["MN-collateral"]; ?>">
 				<img alt="Đ" src="images/black-d-250.png" class="D"> 1000
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
-	<span class="subblock">
+	</div>
+	<div class="subblock">
 		<span class="arrow">→</span> 
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["MN"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
@@ -252,9 +334,9 @@ foreach ($collateralvalue as $type => $stuff) {
 				<?php echo $UItext["percent-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	<br>
-	<span class="subblock">
+	<div class="subblock">
 		
 		<span class="arrow">↪︎</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"] . " " . pretty(round($data["rewards"]["yearly"]["MN"][$fiat], 0), 0) ; ?>
@@ -262,16 +344,16 @@ foreach ($collateralvalue as $type => $stuff) {
 				<?php echo $UItext["price-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	<hr>
-	<span class="subblock">
+	<div class="subblock">
 		<b><?php echo $UItext["1-Evonode"]; ?></b>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["Evo-collateral"]; ?>">
 				<img alt="Đ" src="images/black-d-250.png" class="D"> 4000
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
-	<span class="subblock">
+	</div>
+	<div class="subblock">
 		<span class="arrow">→</span> 
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["Evo"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
@@ -281,16 +363,16 @@ foreach ($collateralvalue as $type => $stuff) {
 				<?php echo $UItext["percent-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	<br>
-	<span class="subblock">
+	<div class="subblock">
 		<span class="arrow">↪︎</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"] . " " . pretty(round($data["rewards"]["yearly"]["Evo"][$fiat], 0), 0) ; ?>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["Evo-1-year-simulation"]); ?>">
 				<?php echo $UItext["price-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 </div>
 
 
@@ -304,7 +386,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	<span class="subblock">
 		<b><?php echo $UItext["1-masternode"]; ?></b>
 	</span>
-	<span class="subblock">
+	<div class="subblock">
 		<span class="arrow">→</span> 
 		<?php echo $UItext["I-bought"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["1000-collateral"]; ?>
 		<span class="arrow">→</span> 
@@ -313,40 +395,40 @@ foreach ($collateralvalue as $type => $stuff) {
 				<?php echo $UItext["1-year-ago"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	<br>
-	<span class="subblock indentright">
+	<div class="subblock indentright">
 		<span class="arrow">↪︎</span>
 		<?php echo $UItext["then-earned"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo pretty($data["simulationpast365d"]["rewardspast365d"]["MN"]["DASH365d"], 1); ?></span> 
-		<div class="bubble" data-tippy-content="<?php echo str_replace("###", $data["simulationpast365d"]["rewardspast365d"]["MN"]["APY365d"], $UItext["MN-approx-APY"]); ?>">
+		<div class="bubble" data-tippy-content="<?php echo str_replace("###", (string)$data["simulationpast365d"]["rewardspast365d"]["MN"]["APY365d"], $UItext["MN-approx-APY"]); ?>">
 				<?php echo $UItext["during-365-days"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
-	<span class="subblock">
+	</div>
+	<div class="subblock">
 		<span class="arrow">→</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><?php echo $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty(round($data["simulationpast365d"]["rewardspast365d"]["MN"][$fiat], 0), 0); ?></span>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["MN-approx-earnings-1-year"]); ?>">
 				<?php echo $UItext["today"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	<br>
-	<span class="subblock indentright">
+	<div class="subblock indentright">
 		<span class="arrow">↪︎</span>
 		<i><?php echo $UItext["whereas-my"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["1000-worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["MN"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["MN"][$fiat]["current"], 0); ?></span></i>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["1000-worth-today"]); ?>">
 				<?php echo $UItext["today"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	
 	<hr>
 	
 	<span class="subblock">
 		<b><?php echo $UItext["1-Evonode"]; ?></b>
 	</span>
-	<span class="subblock">
+	<div class="subblock">
 		<span class="arrow">→</span> 
 		<?php echo $UItext["I-bought"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["4000-collateral"]; ?> 
 		<span class="arrow">→</span> 
@@ -355,33 +437,33 @@ foreach ($collateralvalue as $type => $stuff) {
 				<?php echo $UItext["1-year-ago"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	<br>
-	<span class="subblock indentright">
+	<div class="subblock indentright">
 		<span class="arrow">↪︎</span>
 		<?php echo $UItext["then-earned"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo pretty($data["simulationpast365d"]["rewardspast365d"]["Evo"]["DASH365d"], 1); ?></span> 
-		<div class="bubble" data-tippy-content="<?php echo str_replace("###", $data["simulationpast365d"]["rewardspast365d"]["Evo"]["APY365d"], $UItext["Evo-approx-APY"]); ?>">
+		<div class="bubble" data-tippy-content="<?php echo str_replace("###", (string)$data["simulationpast365d"]["rewardspast365d"]["Evo"]["APY365d"], $UItext["Evo-approx-APY"]); ?>">
 				<?php echo $UItext["during-365-days"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
-	<span class="subblock">
+	</div>
+	<div class="subblock">
 		<span class="arrow">→</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><?php echo $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty(round($data["simulationpast365d"]["rewardspast365d"]["Evo"][$fiat], 0), 0); ?></span>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["Evo-approx-earnings-1-year"]); ?>">
 				<?php echo $UItext["today"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 	<br>
-	<span class="subblock indentright">
+	<div class="subblock indentright">
 		<span class="arrow">↪︎</span>
 		<i><?php echo $UItext["whereas-my"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["4000-worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["Evo"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["Evo"][$fiat]["current"], 0); ?></span></i>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["4000-worth-today"]); ?>">
 				<?php echo $UItext["today"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
-	</span>
+	</div>
 </div>
 
 

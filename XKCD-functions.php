@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 // GET MN REWARD =================================
@@ -39,7 +39,7 @@ function getMnApy(int $enabled_4k_nodes, int $enabled_1k_nodes, float $standard_
 // CALCULATE INTEREST AND APY =================================
 
 // calculates simple interest + real annualized APY for a list of daily rates
-function calculateInterestAndAPY(array $data, string $period_start, string $period_end, string $type, $amount) {
+function calculateInterestAndAPY(array $data, int $period_start, int $period_end, string $type, int $amount):array {
 	
 	if ($period_end < $period_start)
 		return ["error" => "The end date is earlier than the start date."];

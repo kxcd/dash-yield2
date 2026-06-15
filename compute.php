@@ -1,14 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 // ================================== PARAMETERS ==================================
-$development_mode = FALSE;
-include "./configs/.config-compute.php"; // for connection to Dash Core (RPC), CoinGecko (API key) and ExchangeRate-API (API key)
-include "./configs/config.php"; // for fiat currencies & languages list
+$development_mode = true;
+require "configs/.config-compute.php"; // for connection to Dash Core (RPC), CoinGecko (API key) and ExchangeRate-API (API key)
+require "configs/config.php"; // for fiat currencies & languages list
 
 
 // ================================== FUNCTIONS ==================================
 
 // curl
-function http_get_json($url) {
+function http_get_json(string $url):array {
 	$ch = curl_init($url);
 	curl_setopt_array($ch, [
 		CURLOPT_RETURNTRANSFER => true,
@@ -28,7 +28,7 @@ function http_get_json($url) {
 }
 
 // Local Dash Core node request function
-function dash_rpc($method, $params = []) {
+function dash_rpc(string $method, array $params = []):array|int|bool {
 	global $urlDC, $userDC, $passwordDC;
 	$payload = json_encode([
 		'method' => $method,
@@ -55,7 +55,7 @@ function dash_rpc($method, $params = []) {
 }
 
 // XKCD's (complex) functions
-include("./XKCD-functions.php");
+require("./XKCD-functions.php");
 
 
 
@@ -74,10 +74,10 @@ $JSON["generated"]["readable"] = date("Y-m-d H:i:s", $now);
 $JSON["lastPrices"] = [];
 
 // Determine if an update is needed or if lastPrices.json is missing
-$file_exists = file_exists("./cache/lastPrices.json");
+$file_exists = file_exists("cache/lastPrices.json");
 $needs_initial_fetch = !$file_exists;
 if ($file_exists) {
-	$rawContent = file_get_contents("./cache/lastPrices.json");
+	$rawContent = file_get_contents("cache/lastPrices.json");
 		$data_temp = json_decode($rawContent, true);
 		if ($data_temp !== null) {
 			$JSON["lastPrices"] = $data_temp;
@@ -142,7 +142,7 @@ if ($needs_exchange_update) {
 
 // Saving lastPrices.json 
 if ($needs_price_update || $needs_exchange_update) {
-	file_put_contents("./cache/lastPrices.json", json_encode($JSON["lastPrices"], JSON_PRETTY_PRINT), LOCK_EX); // maybe we should prevent saving failures
+	file_put_contents("cache/lastPrices.json", json_encode($JSON["lastPrices"], JSON_PRETTY_PRINT), LOCK_EX); // maybe we should prevent saving failures
 	$JSON["lastPrices"]["status"] = "JSON saved";
 }
 
@@ -156,12 +156,12 @@ $nbblocs = (int) dash_rpc('getblockcount');
 $JSON["APY"][$now] = getMnApy((int) $MNcount["detailed"]["evo"]["enabled"], (int) $MNcount["detailed"]["regular"]["enabled"], getMnReward($nbblocs));
 
 // saved in the history of both ROIs (APYs) ======
-if (file_exists("./cache/APYhistory.json") and is_numeric($JSON["APY"][$now]["MN"]) and is_numeric($JSON["APY"][$now]["Evo"])) {
-	$handle = fopen("./cache/APYhistory.json", "r+");
+if (file_exists("cache/APYhistory.json") and is_numeric($JSON["APY"][$now]["MN"]) and is_numeric($JSON["APY"][$now]["Evo"])) {
+	$handle = fopen("cache/APYhistory.json", "r+");
 	if (!$handle) {
 		echo "ERROR: history file access impossible";
 	} else {
-		$contenu = fread($handle, filesize("./cache/APYhistory.json"));
+		$contenu = fread($handle, filesize("cache/APYhistory.json"));
 		if (!$contenu) {
 			echo "ERROR: history reading impossible";
 		} else {
@@ -195,7 +195,7 @@ foreach ($collateral as $type => $amount) {
 		$currentfiat = strtoupper($fiatcurrency); 
 		$rate = $JSON["lastPrices"]["conversion_rates"][$currentfiat] ?? 1.0;
 
-		$historiqueAPY = json_decode(file_get_contents("./cache/APYhistory.json"), true);
+		$historiqueAPY = json_decode(file_get_contents("cache/APYhistory.json"), true);
 		$rewardspast365d = calculateInterestAndAPY($historiqueAPY, ($now - (365 * 24 * 60 * 60)), $now, $type, $collateral[$type]);
 				
 		$JSON["simulationpast365d"]["collateralpricepast365d"][$type][$currentfiat] = round($amount * $dashPrice365d * $rate, 0);
