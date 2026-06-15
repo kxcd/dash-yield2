@@ -1,0 +1,44 @@
+{
+    "status": "JSON read",
+    "USD": {
+        "source": "CoinGecko",
+        "time": {
+            "timestamp": 1781471569,
+            "readable": "2026-06-14 23:12:49"
+        },
+        "365d": 20.22,
+        "current": 35.34,
+        "status": "Dash\/USD price refreshed"
+    },
+    "conversion_rates": {
+        "source": "ExchangeRate-API",
+        "time": {
+            "timestamp": 1781433006,
+            "readable": "2026-06-14 12:30:06"
+        },
+        "USD": 1,
+        "EUR": 0.8645,
+        "JPY": 160.2327,
+        "GBP": 0.7461,
+        "CNY": 6.7817,
+        "AUD": 1.4203,
+        "CAD": 1.3982,
+        "CHF": 0.7967,
+        "HKD": 7.8359,
+        "SGD": 1.2841,
+        "KRW": 1517.253,
+        "SEK": 9.4335,
+        "NOK": 9.516,
+        "NZD": 1.7154,
+        "MXN": 17.2285,
+        "INR": 95.2997,
+        "TWD": 31.6095,
+        "ZAR": 16.2853,
+        "BRL": 5.0964,
+        "DKK": 6.4508,
+        "PLN": 3.6682,
+        "CZK": 20.877,
+        "RUB": 72.4186,
+        "status": "Conversion rates refreshed"
+    }
+}
