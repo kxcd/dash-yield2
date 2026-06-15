@@ -5,7 +5,6 @@ $computeURL = "http://localhost".dirname($_SERVER['PHP_SELF'])."/compute.php"; /
 require "configs/config.php";
 
 
-
 // Functions ===============
 function pretty(float $number, int $decimals):string {
 	$number = number_format($number, $decimals, ".", "&nbsp;");
@@ -17,7 +16,6 @@ function pretty(float $number, int $decimals):string {
 function is_private_ip(string $ip): bool {
 	return !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
 }
-
 
 function disguise_curl(string $url):mixed {
 	$curl = curl_init();
@@ -50,11 +48,11 @@ function disguise_curl(string $url):mixed {
 
 // Determine IP in case accessing from behind Cloudflare.
 if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-    $ip = $_SERVER['HTTP_CLIENT_IP'];
+	$ip = $_SERVER['HTTP_CLIENT_IP'];
 }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 }else{
-    $ip = $_SERVER['REMOTE_ADDR'];
+	$ip = $_SERVER['REMOTE_ADDR'];
 }
 
 /**
@@ -95,7 +93,7 @@ function parse_accept_language(string $header): array{
 	// Sort by q DESC, then by specificity DESC (more subtags = more specific)
 	usort($parsed, function ($a, $b) {
 		if ($a['q'] !== $b['q'])
-            return ($a['q'] < $b['q']) ? 1 : -1;
+			return ($a['q'] < $b['q']) ? 1 : -1;
 
 		// Specificity = number of hyphens
 		$aSpec = substr_count($a['range'], '-');
@@ -122,14 +120,16 @@ if (isset($_GET["fiat"]) and in_array($_GET["fiat"], array_keys($fiatcurrencies)
 		"path"     => "/",
 		"samesite" => "Lax",
 	]);
-} elseif (!is_private_ip($_SERVER["REMOTE_ADDR"])) { // if public IP is known (that block should be tested, not essential though)
-	// detection of an European country (hence EUR)
-	$Europe = array("AL","AD","AM","AT","AZ","BY","BE","BA","BG","CH","CY","CZ","DE","DK","EE","ES","FR","FI","FO","GB","GE","GI","GR","HR","HU","IE","IS","IT","KZ","LI","LT","LU","LV","MC","MD","ME","MK","MT","NL","NO","PL","PT","RO","RS","RU","SE","SI","SK","SM","TR","UA","VA");
-//	$IPAPI = file_get_contents("https://ipapi.co/" . $_SERVER["REMOTE_ADDR"] . "/country/");
+} elseif (!is_private_ip($_SERVER["REMOTE_ADDR"])) { // if public IP is known, let's try to find its country, hence currency
 	$IPAPI = disguise_curl("https://ipapi.co/" . $ip . "/country/");
-	if (in_array(strtoupper(trim($IPAPI)), $Europe))
-		$fiat = "EUR";
-} // we should also detect Japan to auto-set JPY, etc.
+	$country_code = strtoupper(trim($IPAPI));
+	if ($country_code !== "" && isset($country_currency[$country_code])) {
+		$candidate = $country_currency[$country_code];
+		if (isset($fiatcurrencies[$candidate])) {
+			$fiat = $candidate;
+		}
+	}
+}
 
 $fiatselected = array_fill_keys(array_keys($fiatcurrencies), "");
 $fiatselected[$fiat] = " selected";
