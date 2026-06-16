@@ -27,6 +27,44 @@ $fiatcurrencies = array(
 	"RUB" => array("symbol" => "₽",  "name" => "ruble") // Russian ruble is incredibly low !
 );
 
+// Mapping country code (found via IP address) to currency code
+$country_currency = array(
+	// Euro zone
+	"AD" => "EUR", "AT" => "EUR", "BE" => "EUR", "CY" => "EUR",
+	"DE" => "EUR", "EE" => "EUR", "ES" => "EUR", "FI" => "EUR",
+	"FR" => "EUR", "GR" => "EUR", "HR" => "EUR", "IE" => "EUR",
+	"IT" => "EUR", "LT" => "EUR", "LU" => "EUR", "LV" => "EUR",
+	"MC" => "EUR", "ME" => "EUR", "MT" => "EUR", "NL" => "EUR",
+	"PT" => "EUR", "SI" => "EUR", "SK" => "EUR", "SM" => "EUR",
+	"VA" => "EUR",
+	// Other currencies listed in $fiatcurrencies
+	"AU" => "AUD",
+	"BR" => "BRL",
+	"CA" => "CAD",
+	"CH" => "CHF",
+	"CN" => "CNY",
+	"CZ" => "CZK",
+	"DK" => "DKK",
+	"FO" => "DKK",
+	"GB" => "GBP",
+	"GI" => "GBP",
+	"HK" => "HKD",
+	"IN" => "INR",
+	"JP" => "JPY",
+	"KR" => "KRW",
+	"LI" => "CHF",
+	"MX" => "MXN",
+	"NO" => "NOK",
+	"NZ" => "NZD",
+	"PL" => "PLN",
+	"RU" => "RUB",
+	"SE" => "SEK",
+	"SG" => "SGD",
+	"TW" => "TWD",
+	"US" => "USD",
+	"ZA" => "ZAR",
+);
+
 
 // Dash Yield GUI languages
 $langnames = array("en" => "English", "fr" => "français", "es" => "español", "it" => "italiano");
