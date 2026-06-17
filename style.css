@@ -439,7 +439,7 @@ select.menu, option.menu {
 		line-height: 11px;
 	}
 
-	span.subblock,div.subblock {
+	span.subblock, div.subblock {
 		display: block;
 		margin-bottom: 3px;
 		white-space: normal;
