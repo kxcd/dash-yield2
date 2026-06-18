@@ -10,6 +10,8 @@
   "approx": "All numbers on this page are approximate.",
   "DYOR": "That’s always a good idea.",
   "hover-any": "Hover over any ℹ️ to learn more.",
+  "disclaimer-link": "Please read the <a href=\"#\" data-tippy-content=\"###\">disclaimer</a>.",
+  "disclaimer": "<b>DISCLAIMER&nbsp;:</b> none of the information on this page should be construed as investment advice. Cryptocurrencies are emerging and volatile, and investors should do their own due diligence and research before making any investment decisions.",
   "settings": "Settings",
   "fiat": "fiat",
   "language": "language",
