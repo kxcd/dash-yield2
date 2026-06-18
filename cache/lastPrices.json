@@ -3,11 +3,11 @@
     "USD": {
         "source": "CoinGecko",
         "time": {
-            "timestamp": 1781779231,
-            "readable": "2026-06-18 12:40:31"
+            "timestamp": 1781780755,
+            "readable": "2026-06-18 13:05:55"
         },
         "365d": 19.82,
-        "current": 36.04,
+        "current": 36.21,
         "status": "Dash\/USD price refreshed"
     },
     "conversion_rates": {
