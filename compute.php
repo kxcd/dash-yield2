@@ -8,7 +8,7 @@ require "configs/config.php"; // for fiat currencies & languages list
 // ================================== FUNCTIONS ==================================
 
 // curl
-function http_get_json(string $url):array {
+function http_get_json(string $url): array {
 	$ch = curl_init($url);
 	curl_setopt_array($ch, [
 		CURLOPT_RETURNTRANSFER => true,
@@ -19,7 +19,11 @@ function http_get_json(string $url):array {
 	if ($resp === false) {
 		throw new Exception("cURL error (1) : " . curl_error($ch));
 	}
+	$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
+	if ($httpCode !== 200) {
+		throw new Exception("HTTP error (3) : " . $httpCode);
+	}
 	$json = json_decode($resp, true);
 	if ($json === null) {
 		throw new Exception("Invalid JSON response (2) : " . substr($resp, 0, 200));
@@ -131,6 +135,9 @@ if ($needs_exchange_update) {
 				]
 			];
 			foreach (array_keys($fiatcurrencies) as $f) {
+				if (!isset($data_exch["conversion_rates"][$f])) {
+					$JSON["lastPrices"]["conversion_rates"]["status"] = "Warning: missing rate for " . $f;
+				}
 				$JSON["lastPrices"]["conversion_rates"][$f] = $data_exch["conversion_rates"][$f] ?? 1.0;
 			}
 			$JSON["lastPrices"]["conversion_rates"]["status"] = "Conversion rates refreshed";

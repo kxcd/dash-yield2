@@ -4,7 +4,6 @@ $development_mode = true;
 $computeURL = "http://localhost".dirname($_SERVER['PHP_SELF'])."/compute.php"; // compute.php delivers JSON stuff
 require "configs/config.php";
 
-
 // Functions ===============
 function pretty(float $number, int $decimals):string {
 	$number = number_format($number, $decimals, ".", "&nbsp;");
@@ -17,9 +16,8 @@ function is_private_ip(string $ip): bool {
 	return !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
 }
 
-function disguise_curl(string $url):mixed {
+function disguise_curl(string $url):string|false {
 	$curl = curl_init();
-
 	// Setup headers - I used the same headers from Firefox version 2.0.0.6
 	// below was split up because php.net said the line was too long. :/
 	$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml,";
@@ -41,9 +39,12 @@ function disguise_curl(string $url):mixed {
 	curl_setopt($curl, CURLOPT_TIMEOUT, 10);
 
 	$html = curl_exec($curl); // execute the curl command
+	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+	$curlError = curl_errno($curl);
 	curl_close($curl); // close the connection
-
-	return $html; // and finally, return $html
+	if ($curlError !== 0 || $httpCode !== 200)
+		return false;
+	return $html; // and finally, return $html if not FALSE
 }
 
 // Determine IP in case accessing from behind Cloudflare.
@@ -122,11 +123,13 @@ if (isset($_GET["fiat"]) and in_array($_GET["fiat"], array_keys($fiatcurrencies)
 	]);
 } elseif (!is_private_ip($_SERVER["REMOTE_ADDR"])) { // if public IP is known, let's try to find its country, hence currency
 	$IPAPI = disguise_curl("https://ipapi.co/" . $ip . "/country/");
-	$country_code = strtoupper(trim($IPAPI));
-	if ($country_code !== "" && isset($country_currency[$country_code])) {
-		$candidate = $country_currency[$country_code];
-		if (isset($fiatcurrencies[$candidate])) {
-			$fiat = $candidate;
+	if ($IPAPI !== false) {
+		$country_code = strtoupper(trim($IPAPI));
+		if (preg_match('/^[A-Z]{2}$/', $country_code) && isset($country_currency[$country_code])) {
+			$candidate = $country_currency[$country_code];
+			if (isset($fiatcurrencies[$candidate])) {
+				$fiat = $candidate;
+			}
 		}
 	}
 }
@@ -140,14 +143,21 @@ foreach ($fiatcurrencies as $fiatcode => $stuff)
 
 
 // Selected language ===============
-$lang = "en"; // default, except if cookie
+$lang = "en"; // default
 
 // Detection through Accept-Language (low priority : smashed by cookie or GET)
 if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) and !isset($_COOKIE["lang"]) and !isset($_GET["lang"])) {
-	$code = parse_accept_language($_SERVER["HTTP_ACCEPT_LANGUAGE"]);//var_dump($code[0]['range']);die;
-	if (array_key_exists($code[0]['range'], $langnames)) $lang = $code;
+	$code = parse_accept_language($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+	$range = $code[0]['range']; // ex: "fr-FR" ou "fr"
+	if (array_key_exists($range, $langnames)) {
+		$lang = $range;
+	} else {
+		$base = strtolower(explode("-", $range)[0]);
+		if (array_key_exists($base, $langnames)) {
+			$lang = $base;
+		}
+	}
 }
-
 // Cookie (medium priority : smashes automatic detection above)
 if (isset($_COOKIE["lang"]) and in_array($_COOKIE["lang"], array_keys($langnames)) and !isset($_GET["lang"])) {
 	$lang = $_COOKIE["lang"];
@@ -242,7 +252,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<script src="JS/tippy/tippy6.3.7.js"></script>
 	</head>
 	
-<body onLoad="showLocalDate('.localdate');">
+<body>
 
 <table><tr>
 	
@@ -261,10 +271,10 @@ foreach ($collateralvalue as $type => $stuff) {
 	<p class="small">
 		<?php echo str_replace("###", (string)floor((time() - strtotime("2014-01-18 00:00:00")) / (365 * 24 * 60 * 60)), $UItext["proven-crypto"]); ?>
 		<br><?php echo $UItext["servers"]; ?>
-		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/" target="_blank"><b>Dash</b></a> &amp; <a href="https://docs.dash.org/en/stable/docs/user/masternodes/" target="_blank"><b><?php echo $UItext["MN-Evo"]; ?></b></a>.
+		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/" target="_blank"><b>Dash</b></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><b><?php echo $UItext["MN-Evo"]; ?></b></a>.
 	</p>
 	<p class="smaller">
-		<br><?php echo str_replace("###", date("d M. Y, H:i"), $UItext["page-refreshed"]); ?>
+		<br><?php echo str_replace("###", (string)date("d M. Y, H:i"), $UItext["page-refreshed"]); ?>
 		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a>
 		<br><b><?php echo $UItext["hover-any"]; ?></b>
 	</p>
@@ -281,7 +291,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	<div class="box boxborder boxsmall">
 		<div class="subtitle subsubtitle">👋 <?php echo $UItext["info-help"]; ?></div>
 		<p class="small">
-			<b><a href="https://www.dash.org/" target="_blank">Dash.org</a></b> | <a href="https://docs.dash.org/en/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <b><a href="https://discordapp.com/invite/PXbUxJB" target="_blank">Dash Discord</a></b> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
+			<b><a href="https://www.dash.org/" target="_blank">Dash.org</a></b> | <a href="https://docs.dash.org/<?php echo $lang; ?>/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <b><a href="https://discordapp.com/invite/PXbUxJB" target="_blank">Dash Discord</a></b> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
 		</p>
 	</div>
 	
@@ -297,8 +307,8 @@ foreach ($collateralvalue as $type => $stuff) {
 
 <!-- MARKET PRICE box ================================= -->
 <div class="box boxborder boxunfold">
-	<div class="subtitle"><?php echo $UItext["market-price"]; ?>
-		<div class="bubble" data-tippy-content="<?php echo $UItext["provided-CoinGecko"]; ?>,<br><?php echo date("jS F Y, H:i", $data["lastPrices"]["USD"]["time"]["timestamp"]); ?>.<br>(<?php echo $UItext["provided-ExchangeRate"]; ?>)">
+	<div class="subtitle">📊&nbsp;&nbsp;<?php echo $UItext["market-price"]; ?>
+		<div class="bubble" data-tippy-content="<?php echo $UItext["provided-CoinGecko"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["USD"]["time"]["timestamp"]); ?>.<br>(<?php echo $UItext["provided-ExchangeRate"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["conversion_rates"]["time"]["timestamp"]); ?>.)">
 			<?php echo $UItext["today"]; ?>
 			<span class="info">ℹ️</span>
 		</div>
@@ -317,6 +327,8 @@ foreach ($collateralvalue as $type => $stuff) {
 			<span class="info">ℹ️</span>
 		</div>
 	</div>
+
+	<!-- 1 Masternode ============ -->
 	<div class="subblock">
 		<b><?php echo $UItext["1-masternode"]; ?></b>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["MN-collateral"]; ?>">
@@ -345,7 +357,10 @@ foreach ($collateralvalue as $type => $stuff) {
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
+	
 	<hr>
+	
+	<!-- 1 Evonode ============ -->
 	<div class="subblock">
 		<b><?php echo $UItext["1-Evonode"]; ?></b>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["Evo-collateral"]; ?>">
@@ -383,6 +398,8 @@ foreach ($collateralvalue as $type => $stuff) {
 			<span class="info">ℹ️</span>
 		</div>
 	</div>
+	
+	<!-- 1 Masternode ============ -->
 	<span class="subblock">
 		<b><?php echo $UItext["1-masternode"]; ?></b>
 	</span>
@@ -397,8 +414,8 @@ foreach ($collateralvalue as $type => $stuff) {
 		</div>
 	</div>
 	<br>
-	<div class="subblock indentright">
-		<span class="arrow">↪︎</span>
+	<div class="subblock">
+		<span class="arrow indentright">↪︎</span>
 		<?php echo $UItext["then-earned"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo pretty($data["simulationpast365d"]["rewardspast365d"]["MN"]["DASH365d"], 1); ?></span> 
 		<div class="bubble" data-tippy-content="<?php echo str_replace("###", (string)$data["simulationpast365d"]["rewardspast365d"]["MN"]["APY365d"], $UItext["MN-approx-APY"]); ?>">
 				<?php echo $UItext["during-365-days"]; ?>
@@ -414,8 +431,8 @@ foreach ($collateralvalue as $type => $stuff) {
 		</div>
 	</div>
 	<br>
-	<div class="subblock indentright">
-		<span class="arrow">↪︎</span>
+	<div class="subblock">
+		<span class="arrow indentright">↪︎</span>
 		<i><?php echo $UItext["whereas-my"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["1000-worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["MN"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["MN"][$fiat]["current"], 0); ?></span></i>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["1000-worth-today"]); ?>">
 				<?php echo $UItext["today"]; ?>
@@ -425,6 +442,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	
 	<hr>
 	
+	<!-- 1 Evonode ============ -->
 	<span class="subblock">
 		<b><?php echo $UItext["1-Evonode"]; ?></b>
 	</span>
@@ -439,8 +457,8 @@ foreach ($collateralvalue as $type => $stuff) {
 		</div>
 	</div>
 	<br>
-	<div class="subblock indentright">
-		<span class="arrow">↪︎</span>
+	<div class="subblock">
+		<span class="arrow indentright">↪︎</span>
 		<?php echo $UItext["then-earned"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo pretty($data["simulationpast365d"]["rewardspast365d"]["Evo"]["DASH365d"], 1); ?></span> 
 		<div class="bubble" data-tippy-content="<?php echo str_replace("###", (string)$data["simulationpast365d"]["rewardspast365d"]["Evo"]["APY365d"], $UItext["Evo-approx-APY"]); ?>">
 				<?php echo $UItext["during-365-days"]; ?>
@@ -456,8 +474,8 @@ foreach ($collateralvalue as $type => $stuff) {
 		</div>
 	</div>
 	<br>
-	<div class="subblock indentright">
-		<span class="arrow">↪︎</span>
+	<div class="subblock">
+		<span class="arrow indentright">↪︎</span>
 		<i><?php echo $UItext["whereas-my"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["4000-worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["Evo"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["Evo"][$fiat]["current"], 0); ?></span></i>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["4000-worth-today"]); ?>">
 				<?php echo $UItext["today"]; ?>
