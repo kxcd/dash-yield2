@@ -246,6 +246,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<link rel="apple-touch-icon" href="images/favicons/favicon-128.png" sizes="128x128">
 		<link rel="apple-touch-icon" href="images/favicons/favicon-192.png" sizes="192x192">
 		<link rel="stylesheet" href="style.css<?php echo $renewCSS; ?>" type="text/css">
+		<link rel="stylesheet" href="style-smartphone.css<?php echo $renewCSS; ?>" type="text/css">
 		<script src="JS/scripts.js"></script>
 		<script src="JS/tippy/popper2.11.8.js"></script>
 		<script src="JS/tippy/tippy6.3.7.js"></script>
@@ -346,9 +347,7 @@ foreach ($collateralvalue as $type => $stuff) {
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
-	<br>
-	<div class="subblock">
-		
+	<div class="subblock right">
 		<span class="arrow">↪︎</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"] . " " . pretty(round($data["rewards"]["yearly"]["MN"][$fiat], 0), 0) ; ?>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["MN-1-year-simulation"]); ?>">
@@ -378,8 +377,7 @@ foreach ($collateralvalue as $type => $stuff) {
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
-	<br>
-	<div class="subblock">
+	<div class="subblock right">
 		<span class="arrow">↪︎</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"] . " " . pretty(round($data["rewards"]["yearly"]["Evo"][$fiat], 0), 0) ; ?>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["Evo-1-year-simulation"]); ?>">
@@ -404,16 +402,15 @@ foreach ($collateralvalue as $type => $stuff) {
 	</span>
 	<div class="subblock">
 		<span class="arrow">→</span> 
-		<?php echo $UItext["I-bought"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["1000-collateral"]; ?>
-		<span class="arrow">→</span> 
+		<?php echo $UItext["I-bought"]; ?> <?php echo str_replace("#DASH#", (string)"<img alt=\"Đ\" src=\"images/black-d-250.png\" class=\"D\">", $UItext["1000-collateral"]); ?>
 		<?php echo "<span class=\"about\">≈</span>&nbsp;" . $fiatcurrencies[$fiat]["symbol"] . " " . pretty($collateralvalue["MN"][$fiat]["365d"], 0); ?>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§", "@@@"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($past365dprice[$fiat], 2), $daysago365), $UItext["approx-MN-collateral-1-year-ago"]); ?>">
 				<?php echo $UItext["1-year-ago"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
-	<br>
-	<div class="subblock">
+	<br class="flat">
+	<div class="subblock left">
 		<span class="arrow indentright">↪︎</span>
 		<?php echo $UItext["then-earned"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo pretty($data["simulationpast365d"]["rewardspast365d"]["MN"]["DASH365d"], 1); ?></span> 
 		<div class="bubble" data-tippy-content="<?php echo str_replace("###", (string)$data["simulationpast365d"]["rewardspast365d"]["MN"]["APY365d"], $UItext["MN-approx-APY"]); ?>">
@@ -429,10 +426,10 @@ foreach ($collateralvalue as $type => $stuff) {
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
-	<br>
-	<div class="subblock">
+	<br class="flat">
+	<div class="subblock left">
 		<span class="arrow indentright">↪︎</span>
-		<i><?php echo $UItext["whereas-my"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["1000-worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["MN"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["MN"][$fiat]["current"], 0); ?></span></i>
+		<i><?php echo $UItext["whereas-my"]; ?> <?php echo str_replace("#DASH#", (string)"<img alt=\"Đ\" src=\"images/black-d-250.png\" class=\"D\">", $UItext["1000-worth"]); ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["MN"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["MN"][$fiat]["current"], 0); ?></span></i>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["1000-worth-today"]); ?>">
 				<?php echo $UItext["today"]; ?>
 				<span class="info">ℹ️</span>
@@ -447,16 +444,15 @@ foreach ($collateralvalue as $type => $stuff) {
 	</span>
 	<div class="subblock">
 		<span class="arrow">→</span> 
-		<?php echo $UItext["I-bought"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["4000-collateral"]; ?> 
-		<span class="arrow">→</span> 
+		<?php echo $UItext["I-bought"]; ?> <?php echo str_replace("#DASH#", (string)"<img alt=\"Đ\" src=\"images/black-d-250.png\" class=\"D\">", $UItext["4000-collateral"]); ?> 
 		<?php echo "<span class=\"about\">≈</span>&nbsp;" . $fiatcurrencies[$fiat]["symbol"] . " " . pretty($collateralvalue["Evo"][$fiat]["365d"], 0); ?>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§", "@@@"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($past365dprice[$fiat], 2), $daysago365), $UItext["approx-Evo-collateral-1-year-ago"]); ?>">
 				<?php echo $UItext["1-year-ago"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
-	<br>
-	<div class="subblock">
+	<br class="flat">
+	<div class="subblock left">
 		<span class="arrow indentright">↪︎</span>
 		<?php echo $UItext["then-earned"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo pretty($data["simulationpast365d"]["rewardspast365d"]["Evo"]["DASH365d"], 1); ?></span> 
 		<div class="bubble" data-tippy-content="<?php echo str_replace("###", (string)$data["simulationpast365d"]["rewardspast365d"]["Evo"]["APY365d"], $UItext["Evo-approx-APY"]); ?>">
@@ -472,10 +468,10 @@ foreach ($collateralvalue as $type => $stuff) {
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
-	<br>
-	<div class="subblock">
+	<br class="flat">
+	<div class="subblock left">
 		<span class="arrow indentright">↪︎</span>
-		<i><?php echo $UItext["whereas-my"]; ?> <img alt="Đ" src="images/black-d-250.png" class="D"> <?php echo $UItext["4000-worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["Evo"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["Evo"][$fiat]["current"], 0); ?></span></i>
+		<i><?php echo $UItext["whereas-my"]; ?> <?php echo str_replace("#DASH#", (string)"<img alt=\"Đ\" src=\"images/black-d-250.png\" class=\"D\">", $UItext["4000-worth"]); ?> <span class="about">≈</span>&nbsp;<?php echo "<span class=\"" . $collateralcolour["Evo"] . "\">" . $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty($collateralvalue["Evo"][$fiat]["current"], 0); ?></span></i>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["4000-worth-today"]); ?>">
 				<?php echo $UItext["today"]; ?>
 				<span class="info">ℹ️</span>

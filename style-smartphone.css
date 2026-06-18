@@ -1,0 +1,162 @@
+/* --- SMARTPHONE MODE ------------------------------ */
+@media (max-width: 767px) {
+
+	body {
+		padding: 8px;
+		font-size: 12px;
+		line-height: 1.5;
+		display: flex;
+		flex-direction: column;
+		border:none;
+	}
+	body::before {
+		width: 100%;
+		height: 100%;
+		background-size: cover;
+		opacity: 0.05;
+	}
+	table, tr, td {
+		display: block;
+		width: 100% !important;
+		box-sizing: border-box;
+	}
+	table {
+		height: auto;
+	}
+	td.title, td.stuff {
+		padding-left: 0 !important;
+		width: 100% !important;
+	}
+	div.box {
+		display: block;
+		width: 100%;
+		margin: 15px 0;
+		padding: 8px;
+		box-sizing: border-box;
+		font-size: 16px;
+		line-height: 1.5;
+		background-color: rgba(255, 255, 255, 0.2);
+		text-align: center;
+	}
+	div.box:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+		transform: none;
+		transition: all 0.5s ease-out;
+		box-shadow: none;
+	}
+	div.boxborder {
+		border: 1px dotted #008de4;
+	}
+	div.boxsmall {
+		font-size: 14px;
+		line-height: 1.4;
+		padding: 5px 10px;
+		margin: 10px 0px 0px 0px;
+		text-align: center;
+		background-color: rgb(226, 226, 226);
+		background-color: rgba(226, 226, 226, 0.7);
+	}
+	hr {
+		border: 1.5px dotted #5eaedf;
+	}
+
+	/* Title */
+	div.title {
+		float: none;
+		width: 100%;
+		text-align: center;
+		margin-bottom: 8px;
+	}
+	img.logo {
+		width: 45%;
+		height: auto;
+	}
+	div.banner {
+		width: 15%;
+		padding: 5px 20px;
+	}
+	span.subbrand {
+		top: -12px;
+		font-size: 20px;
+	}
+	div.subtitle,
+	div.subsubtitle {
+		position: relative !important;
+		top: 0 !important;
+		left: 0 !important;
+
+		display: block;
+		max-width: 100%;
+		white-space: normal;
+		box-sizing: border-box;
+
+		padding: 3px 6px;
+		margin: 4px 0 6px 0;
+
+		border-radius: 4px;
+
+		font-size: 17px;
+		line-height: 1.5;
+	}
+
+	div.subsubtitle {
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	span.subblock, div.subblock {
+		display: block !important;
+		margin-bottom: 3px;
+		white-space: normal;
+	}
+	span.indentright {
+		margin-left: 50px;
+	}
+	div.boxyearnings {
+		text-align: center;
+	}
+	div.bubble {
+		font-size: 12px;
+		padding: 1px 4px;
+		top: -1px;
+		border-radius: 4px;
+	}
+	img.D {
+		height: 13px;
+	}
+	div.bubble img.D {
+		height: 7px;
+	}
+	span.bigger {
+		font-size: 30px;
+	}
+	span.decimals {
+		font-size: 14px;
+	}
+	span.green {
+		font-size: 20px;
+	}
+	p.small {
+		font-size: 14px;
+		line-height: 1.4;
+	}
+	p.smaller {
+		font-size: 13px;
+		line-height: 1.4;
+	}
+	select.menu, option.menu {
+		font-size: 13px;
+	}
+	br.flat {
+	  line-height: 0;
+	  font-size: 0;
+	  display: none;
+	}
+	.tippy-content {
+		font-size: 13px;
+	}
+	.tippy-box {
+		border-radius: 3px;
+		padding: 2px;
+	}
+}

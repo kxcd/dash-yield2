@@ -66,7 +66,8 @@ td.stuff {
 div.box {
 	margin: 4vh 2vw;
 	padding: 10px;
-	font-size: 20px;
+	font-size: 19px;
+	font-size: clamp(14px, 1.2vw + 10px, 19px);
 	line-height: 32px;
 	display: inline-block;
 	text-align: left;
@@ -102,16 +103,18 @@ span.subbrand {
 	padding-left: 8px;
 	font-size: 40px;
 }
+div.left {
+	text-align: left;
+}
 div.right {
-	border: 1px rgb(88, 189, 108) solid;
-	display: block;
-	width: 100%;
+	display: block !important;
 	text-align: right;
 }
 div.box:hover {
 	background-color: rgba(255, 255, 255, 0.5);
 	transform: scale(1.02);
 	transition: all 0.5s ease-out;
+	box-shadow: 8px 8px 10px 5px rgba(0, 141, 228, 0.3);
 }
 div.boxborder {
 	border: 2px dotted #008de4;
@@ -127,6 +130,10 @@ div.boxsmall {
 	padding: 10px 20px;
 	margin: 20px 0px 20px 15px;
 }
+div.boxsmall:hover {
+	box-shadow: none;
+	transform: none;
+}
 div.boxyearnings {
 	text-align: right;
 }
@@ -134,8 +141,9 @@ div.subtitle {
 	font-family: 'MontserratItalic', sans-serif;
 	font-weight: 400;
 	font-style: italic;
-	font-size: 22px;
-	line-height: 34px;
+	font-size: 20px;
+	font-size: clamp(14px, 1.2vw + 10px, 20px);
+	line-height: 30px;
 	background-color: #008de4;
 	color: #eee;
 	padding: 8px 20px;
@@ -146,8 +154,7 @@ div.subtitle {
 	position: relative;
 	left: -70px;
 	top: -35px;
-	/* width: 50%;
-	top: +20px; */
+	text-align: left;
 }
 div.subsubtitle {
 	font-size: 16px;
@@ -162,7 +169,7 @@ span.boldsub {
 	font-weight: 600;
 	font-style: italic;
 }
-span.subblock,div.subblock {
+span.subblock, div.subblock {
 	white-space: nowrap;
 	display: inline-block;
 	background-color: inherit;
@@ -196,7 +203,7 @@ div.banner {
 	color: #fff;
 	background-color: red;
 	padding: 5px 20px;
-	rotate: -20deg;
+	rotate: -15deg;
 }
 div.box:hover span.subblock div.bubble, div.box:hover div.subtitle div.bubble {
 	background-color:#bbb;
@@ -336,160 +343,5 @@ select.menu, option.menu {
 		opacity: 1;
 		transform: scale(1) translateY(0px);
 		
-	}
-}
-
-
-
-
-/* --- SMARTPHONE MODE ------------------------------ */
-@media (max-width: 767px) {
-
-	body {
-		padding: 8px;
-		font-size: 10px;
-		line-height: 14px;
-		display: flex;
-		flex-direction: column;
-		border:none;
-	}
-	body::before {
-		width: 100%;
-		height: 100%;
-		background-size: cover;
-		opacity: 0.05;
-	}
-	table, tr, td {
-		display: block;
-		width: 100% !important;
-		box-sizing: border-box;
-	}
-	table {
-		height: auto;
-	}
-	td.title, td.stuff {
-		padding-left: 0 !important;
-		width: 100% !important;
-	}
-	div.box {
-		display: block;
-		width: 100%;
-		margin: 8px 0;
-		padding: 8px;
-		box-sizing: border-box;
-		font-size: 10px;
-		line-height: 15px;
-		background-color: rgba(255, 255, 255, 0.2);
-	}
-	div.boxborder {
-		border: 1px dotted #008de4;
-	}
-	div.boxsmall {
-		font-size: 8px;
-		line-height: 12px;
-		padding: 5px 10px;
-		margin: 0px;
-	}
-	hr {
-		border: 0.5px dotted #5eaedf;
-	}
-	div.right {
-		display: block;
-		width: 100%;
-		text-align: right;
-	}
-
-	/* Titre */
-	div.title {
-		float: none;
-		width: 100%;
-		text-align: center;
-		margin-bottom: 8px;
-	}
-	img.logo {
-		width: 45%;
-		height: auto;
-	}
-	span.subbrand {
-		top: -12px;
-		font-size: 20px;
-	}
-	div.subtitle,
-	div.subsubtitle {
-		position: relative !important;
-		top: 0 !important;
-		left: 0 !important;
-
-		display: block;
-		max-width: 100%;
-		white-space: normal;
-		box-sizing: border-box;
-
-		padding: 3px 6px;
-		margin: 4px 0 6px 0;
-
-		border-radius: 4px;
-
-		font-size: 10px;
-		line-height: 13px;
-	}
-
-	div.subsubtitle {
-		font-size: 8px;
-		line-height: 11px;
-	}
-
-	span.subblock, div.subblock {
-		display: block;
-		margin-bottom: 3px;
-		white-space: normal;
-	}
-	span.indentright {
-		margin-left: 20px;
-	}
-	div.boxyearnings {
-		text-align: left;
-	}
-	div.bubble {
-		font-size: 7px;
-		padding: 1px 4px;
-		top: -1px;
-		border-radius: 4px;
-	}
-	img.D {
-		height: 9px;
-	}
-	div.bubble img.D {
-		height: 7px;
-	}
-	span.bigger {
-		font-size: 12px;
-	}
-	span.decimals {
-		font-size: 8px;
-	}
-	span.green {
-		font-size: 14px;
-	}
-	a.box {
-		font-size: 6px;
-	}
-	p.small {
-		font-size: 8px;
-		line-height: 12px;
-	}
-	p.smaller {
-		font-size: 8px;
-		line-height: 12px;
-	}
-	select.menu, option.menu {
-		font-size: 8px;
-	}
-	.tippy-content {
-		font-size: 8px;
-	}
-	.tippy-box {
-		border-radius: 3px;
-		padding: 2px;
 	}
 }
