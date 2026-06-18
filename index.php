@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 // ================================== PARAMETERS ==================================
-$development_mode = true;
+$development_mode = FALSE;
 $computeURL = "http://localhost".dirname($_SERVER['PHP_SELF'])."/compute.php"; // compute.php delivers JSON stuff
 require "configs/config.php";
 
@@ -276,7 +276,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	</p>
 	<p class="smaller">
 		<br><?php echo str_replace("###", (string)date("d M. Y, H:i"), $UItext["page-refreshed"]); ?>
-		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a>
+		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a> <?php echo str_replace("###", (string)$UItext["disclaimer"], $UItext["disclaimer-link"]); ?>
 		<br><b><?php echo $UItext["hover-any"]; ?></b>
 	</p>
 	

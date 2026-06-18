@@ -10,6 +10,8 @@
   "approx": "Tous les nombres sur cette page sont approximatifs.",
   "DYOR": "FVPR, “Faites Vos Propres Recherches”. C’est toujours une bonne idée.",
   "hover-any": "Survolez n'importe quel ℹ️ pour en savoir plus.",
+  "disclaimer-link": "Veuillez lire l’<a href=\"#\" data-tippy-content=\"###\">avertissement légal</a>.",
+  "disclaimer": "<b>AVERTISSEMENT&nbsp;:</b> les informations contenues sur cette page ne constituent en aucun cas un conseil en investissement. Les cryptomonnaies sont un marché émergent et volatil&nbsp;; il est donc essentiel que les investisseurs effectuent leurs propres recherches et analyses avant de prendre toute décision d’investissement.",
   "settings": "Paramètres",
   "fiat": "monnaie fiduciaire",
   "language": "langue",

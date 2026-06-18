@@ -10,6 +10,8 @@
   "approx": "Tutti i numeri in questa pagina sono approssimativi.",
   "DYOR": "FTPR, “Fai le Tue Proprie Ricerche”. È sempre una buona idea.",
   "hover-any": "Passate il cursore su qualsiasi ℹ️ per saperne di più.",
+  "disclaimer-link": "Si prega di leggere l’<a href=\"#\" data-tippy-content=\"###\">avviso</a>.",
+  "disclaimer": "<b>AVVISO&nbsp;:</b> le informazioni contenute in questa pagina non costituiscono consulenza finanziaria. Le criptovalute rappresentano un mercato emergente e volatile; pertanto, è fondamentale che gli investitori conducano le proprie ricerche e analisi prima di prendere qualsiasi decisione di investimento.",
   "settings": "Impostazioni",
   "fiat": "valuta fiat",
   "language": "lingua",

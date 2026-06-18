@@ -10,6 +10,8 @@
   "approx": "Todos los números de esta página son aproximados.",
   "DYOR": "HTPI, “Haz Tu Propia Investigación”. Siempre es una buena idea.",
   "hover-any": "Pase el cursor sobre cualquier ℹ️ para saber más.",
+  "disclaimer-link": "Por favor, lea la <a href=\"#\" data-tippy-content=\"###\">advertencia</a>.",
+  "disclaimer": "<b>ADVERTENCIA&nbsp;:</b> la información de esta página no constituye asesoramiento de inversión. Las criptomonedas son un mercado emergente y volátil&nbsp;; por lo tanto, es fundamental que los inversores realicen su propia investigación y análisis antes de tomar cualquier decisión de inversión.",
   "settings": "Ajustes",
   "fiat": "moneda fiduciaria",
   "language": "idioma",

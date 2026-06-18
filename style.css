@@ -163,6 +163,7 @@ div.subsubtitle {
 	padding: 5px 15px;
 	left: -40px;
 	top: -20px;
+	white-space: normal;
 }
 span.boldsub {
 	font-family: 'MontserratSemiBoldItalic', sans-serif;
