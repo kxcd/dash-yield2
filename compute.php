@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 // ================================== PARAMETERS ==================================
-
+// $development_mode = FALSE;
 require "configs/.config-compute.php"; // for connection to Dash Core (RPC), CoinGecko (API key) and ExchangeRate-API (API key)
 require "configs/config.php"; // for fiat currencies & languages list
 
