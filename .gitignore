@@ -1,1 +1,3 @@
 .config-compute.php
+logs/
+cache/
