@@ -277,7 +277,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
 	</p>
 	<p class="smaller">
-		<br><?php echo str_replace("###", (string)date("d M. Y, H:i"), $UItext["page-refreshed"]); ?>
+		<br><?php echo str_replace("###", (string)"<span class=\"Roboto-bold\">" . date("d M. Y, H:i") . "</span>", $UItext["page-refreshed"]); ?>
 		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a> <?php echo str_replace("###", (string)$UItext["disclaimer"], $UItext["disclaimer-link"]); ?>
 		<br><span class="Roboto-bold"><b><?php echo $UItext["hover-any"]; ?></b></span>
 	</p>
