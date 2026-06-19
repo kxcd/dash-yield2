@@ -1,4 +1,6 @@
 <?php declare(strict_types=1);
+$development_mode = TRUE;
+
 // ================================== PARAMETERS ==================================
 $computeURL = "http://localhost".dirname($_SERVER['PHP_SELF'])."/compute.php"; // compute.php delivers JSON stuff
 require "configs/config.php";
@@ -47,11 +49,11 @@ function disguise_curl(string $url):string|false {
 }
 
 // Determine IP in case accessing from behind Cloudflare.
-if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 	$ip = $_SERVER['HTTP_CLIENT_IP'];
-}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 	$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-}else{
+} else {
 	$ip = $_SERVER['REMOTE_ADDR'];
 }
 
@@ -247,9 +249,10 @@ foreach ($collateralvalue as $type => $stuff) {
 		<link rel="apple-touch-icon" href="images/favicons/favicon-192.png" sizes="192x192">
 		<link rel="stylesheet" href="style.css<?php echo $renewCSS; ?>" type="text/css">
 		<link rel="stylesheet" href="style-smartphone.css<?php echo $renewCSS; ?>" type="text/css">
-		<script src="JS/scripts.js"></script>
+		<script src="JS/scripts.js<?php echo $renewCSS; ?>"></script>
 		<script src="JS/tippy/popper2.11.8.js"></script>
 		<script src="JS/tippy/tippy6.3.7.js"></script>
+		<script> const JSalert = "<?php echo $UItext["JSalert"]; ?>"; </script>
 	</head>
 	
 <body>
@@ -269,19 +272,19 @@ foreach ($collateralvalue as $type => $stuff) {
 	</a>
 	<br><span class="blue"><?php echo $UItext["MN-Evo-earnings-b"]; ?></span>
 	<p class="small">
-		<?php echo str_replace("###", (string)floor((time() - strtotime("2014-01-18 00:00:00")) / (365 * 24 * 60 * 60)), $UItext["proven-crypto"]); ?>
-		<br><?php echo $UItext["servers"]; ?>
-		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/" target="_blank"><b>Dash</b></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><b><?php echo $UItext["MN-Evo"]; ?></b></a>.
+		<?php echo str_replace(array("###", "<b>", "</b>"), array(floor((time() - strtotime("2014-01-18 00:00:00")) / (365 * 24 * 60 * 60)), "<span class=\"Roboto-bold\"><b>", "</b></span>"), $UItext["proven-crypto"]); ?>
+		<br><?php echo str_replace(array("<b>", "</b>"), array("<span class=\"Roboto-bold\"><b>", "</b></span>"), $UItext["servers"]); ?>
+		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
 	</p>
 	<p class="smaller">
 		<br><?php echo str_replace("###", (string)date("d M. Y, H:i"), $UItext["page-refreshed"]); ?>
 		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a> <?php echo str_replace("###", (string)$UItext["disclaimer"], $UItext["disclaimer-link"]); ?>
-		<br><b><?php echo $UItext["hover-any"]; ?></b>
+		<br><span class="Roboto-bold"><b><?php echo $UItext["hover-any"]; ?></b></span>
 	</p>
 	
 	<!-- SETTINGS box ================================= -->
 	<div class="box boxborder boxsmall">
-		<div class="subtitle subsubtitle">⚙️ <?php echo $UItext["settings"]; ?></div>
+		<div class="subtitle subsubtitle"><span class="bold">⚙️</span> <?php echo $UItext["settings"]; ?></div>
 		<?php echo $UItext["fiat"]; ?>&nbsp;: <select class="menu" name="fiat" id="fiatselect" onChange="changefiat();"><?php echo implode("", $fiatoptions); ?></select>
 		<br>
 		<?php echo $UItext["language"]; ?>&nbsp;: <select class="menu" name="lang" id="langselect" onChange="changelang();"><?php echo implode("", $langoptions); ?></select>
@@ -289,9 +292,9 @@ foreach ($collateralvalue as $type => $stuff) {
 
 	<!-- LINKS box ================================= -->
 	<div class="box boxborder boxsmall">
-		<div class="subtitle subsubtitle">👋 <?php echo $UItext["info-help"]; ?></div>
+		<div class="subtitle subsubtitle"><span class="bold">👋</span> <?php echo $UItext["info-help"]; ?></div>
 		<p class="small">
-			<b><a href="https://www.dash.org/" target="_blank">Dash.org</a></b> | <a href="https://docs.dash.org/<?php echo $lang; ?>/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <b><a href="https://discordapp.com/invite/PXbUxJB" target="_blank">Dash Discord</a></b> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
+			<a href="https://www.dash.org/" target="_blank"><span class="Roboto-bold"><b>Dash.org</b></span></a> | <a href="https://docs.dash.org/<?php echo $lang; ?>/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <a href="https://discordapp.com/invite/PXbUxJB" target="_blank"><span class="Roboto-bold"><b>Dash Discord</b></span></a> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
 		</p>
 	</div>
 	
@@ -307,7 +310,7 @@ foreach ($collateralvalue as $type => $stuff) {
 
 <!-- MARKET PRICE box ================================= -->
 <div class="box boxborder boxunfold">
-	<div class="subtitle">📊&nbsp;&nbsp;<?php echo $UItext["market-price"]; ?>
+	<div class="subtitle"><span class="bold">📊</span>&nbsp;&nbsp;<?php echo $UItext["market-price"]; ?>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["provided-CoinGecko"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["USD"]["time"]["timestamp"]); ?>.<br>(<?php echo $UItext["provided-ExchangeRate"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["conversion_rates"]["time"]["timestamp"]); ?>.)">
 			<?php echo $UItext["today"]; ?>
 			<span class="info">ℹ️</span>
@@ -321,27 +324,26 @@ foreach ($collateralvalue as $type => $stuff) {
 
 <!-- YEARLY EARNINGS box ================================= -->
 <div class="box boxborder boxyearnings boxunfold" style="animation-duration: 1.7s;">
-	<div class="subtitle">🗓️&nbsp;&nbsp;<?php echo $UItext["yearly-earnings"]; ?></span>
+	<div class="subtitle"><span class="bold">🗓️</span>&nbsp;&nbsp;<?php echo $UItext["yearly-earnings"]; ?></span>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["XKCD-functions"]; ?>">
 			<?php echo $UItext["today"]; ?>
 			<span class="info">ℹ️</span>
 		</div>
+		<img src="images/Dash-yield.png" class="tree">
 	</div>
 
 	<!-- 1 Masternode ============ -->
-	<div class="subblock">
-		<b><?php echo $UItext["1-masternode"]; ?></b>
-		<div class="bubble" data-tippy-content="<?php echo $UItext["MN-collateral"]; ?>">
-				<img alt="Đ" src="images/black-d-250.png" class="D"> 1000
-				<span class="info">ℹ️</span>
-		</div>
+	<div class="subblock" data-tippy-content="<?php echo $UItext["MN-collateral"]; ?>">
+		<span class="bold"><b>1 Masternode</b></span>, <?php echo $UItext["collateral"]; ?> 
+		<img alt="Đ" src="images/black-d-250.png" class="D"><input id="coll-MN" type="number" value="1000" min="1" max="1000" placeholder="1000" class="partial" onInput="partial('MN');" data-tippy-content="<?php echo $UItext["MN-collateral-edit"]; ?>" data-tippy-placement="bottom">
+		<span class="info">ℹ️</span>
 	</div>
 	<div class="subblock">
 		<span class="arrow">→</span> 
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["MN"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
 		<span class="about">≈</span>&nbsp;<img alt="Đ" src="images/black-d-250.png" class="D"> 
-		<?php echo pretty($data["rewards"]["yearly"]["MN"]["DASH"], 1) ; ?>
+		<span id="MN-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["MN"]["DASH"]; ?>"><?php echo pretty($data["rewards"]["yearly"]["MN"]["DASH"], 1) ; ?></span>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["MN-varying"]; ?>">
 				<?php echo $UItext["percent-stable"]; ?>
 				<span class="info">ℹ️</span>
@@ -349,7 +351,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	</div>
 	<div class="subblock right">
 		<span class="arrow">↪︎</span> 
-		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"] . " " . pretty(round($data["rewards"]["yearly"]["MN"][$fiat], 0), 0) ; ?>
+		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"]; ?> <span id="MN-fiat-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["MN"][$fiat]; ?>"><?php echo pretty(round($data["rewards"]["yearly"]["MN"][$fiat], 0), 0); ?></span>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["MN-1-year-simulation"]); ?>">
 				<?php echo $UItext["price-stable"]; ?>
 				<span class="info">ℹ️</span>
@@ -359,19 +361,17 @@ foreach ($collateralvalue as $type => $stuff) {
 	<hr>
 	
 	<!-- 1 Evonode ============ -->
-	<div class="subblock">
-		<b><?php echo $UItext["1-Evonode"]; ?></b>
-		<div class="bubble" data-tippy-content="<?php echo $UItext["Evo-collateral"]; ?>">
-				<img alt="Đ" src="images/black-d-250.png" class="D"> 4000
-				<span class="info">ℹ️</span>
-		</div>
+	<div class="subblock" data-tippy-content="<?php echo $UItext["Evo-collateral"]; ?>">
+		<span class="bold"><b>1 Evonode</b></span>, <?php echo $UItext["collateral"]; ?> 
+		<img alt="Đ" src="images/black-d-250.png" class="D"><input id="coll-Evo" type="number" value="4000" min="1" max="4000" placeholder="4000" class="partial" onInput="partial('Evo');" data-tippy-content="<?php echo $UItext["Evo-collateral-edit"]; ?>" data-tippy-placement="bottom">
+		<span class="info">ℹ️</span>
 	</div>
 	<div class="subblock">
 		<span class="arrow">→</span> 
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["Evo"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
 		<span class="about">≈</span>&nbsp;<img alt="Đ" src="images/black-d-250.png" class="D"> 
-		<?php echo pretty($data["rewards"]["yearly"]["Evo"]["DASH"], 1) ; ?> 
+		<span id="Evo-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["Evo"]["DASH"]; ?>"><?php echo pretty($data["rewards"]["yearly"]["Evo"]["DASH"], 1) ; ?></span>
 		<div class="bubble" data-tippy-content="<?php echo $UItext["Evo-varying"]; ?>">
 				<?php echo $UItext["percent-stable"]; ?>
 				<span class="info">ℹ️</span>
@@ -379,7 +379,8 @@ foreach ($collateralvalue as $type => $stuff) {
 	</div>
 	<div class="subblock right">
 		<span class="arrow">↪︎</span> 
-		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"] . " " . pretty(round($data["rewards"]["yearly"]["Evo"][$fiat], 0), 0) ; ?>
+
+		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"]; ?> <span id="Evo-fiat-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["Evo"][$fiat]; ?>"><?php echo pretty(round($data["rewards"]["yearly"]["Evo"][$fiat], 0), 0); ?></span>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["Evo-1-year-simulation"]); ?>">
 				<?php echo $UItext["price-stable"]; ?>
 				<span class="info">ℹ️</span>
@@ -390,7 +391,7 @@ foreach ($collateralvalue as $type => $stuff) {
 
 <!-- ONE-YEAR-AGO SIMULATION box ================================= -->
 <div class="box boxborder boxunfold" style="animation-duration: 2s;">
-	<div class="subtitle">🧮&nbsp;&nbsp;“<?php echo $UItext["earnings-1-year-ago"]; ?>”
+	<div class="subtitle"><span class="bold">🧮</span>&nbsp;&nbsp;“<?php echo $UItext["earnings-1-year-ago"]; ?>”
 		<div class="bubble" data-tippy-content="<?php echo $UItext["way-to-estimate"]; ?>">
 			<span class="info">ℹ️</span>
 		</div>
@@ -398,7 +399,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	
 	<!-- 1 Masternode ============ -->
 	<span class="subblock">
-		<b><?php echo $UItext["1-masternode"]; ?></b>
+		<span class="bold"><b>1 Masternode</b></span>
 	</span>
 	<div class="subblock">
 		<span class="arrow">→</span> 
@@ -440,7 +441,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	
 	<!-- 1 Evonode ============ -->
 	<span class="subblock">
-		<b><?php echo $UItext["1-Evonode"]; ?></b>
+		<span class="bold"><b>1 Evonode</b></span>
 	</span>
 	<div class="subblock">
 		<span class="arrow">→</span> 

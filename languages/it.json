@@ -24,15 +24,16 @@
   "today": "oggi",
   "yearly-earnings": "<span class=\"boldsub\">Guadagni annuali</span> dei masternodes &amp; Evonodes Dash",
   "XKCD-functions": "Percentuali calcolate dalle funzioni di XKCD, basate sugli attuali parametri di Dash.",
-  "1-masternode": "1 Masternode",
+  "collateral": "cauzione",
   "MN-collateral": "Gestire un masternode richiede una cauzione di 1000&nbsp;Đ. Il server che ospita il masternode comporta anche delle spese, in genere modeste.",
+  "MN-collateral-edit": "Regola la cauzione (tra 1 e 1000 Đ) se utilizzi un masternode condiviso con altri operatori.<br>Se sei l'unico operatore, la tua cauzione è di 1000 Đ.",
   "MN-varying": "La % di guadagni annuali può variare nel corso di un anno, in funzione in particolare dell'evoluzione del numero totale di masternodes attivi.<br>Qualunque sia questa %, voi <b>GUADAGNERETE</b> Dash finché il vostro masternode funzionerà correttamente.",
   "percent-stable": "se la % è stabile",
   "worth": "per un valore di",
   "MN-1-year-simulation": "Questa è una simulazione di guadagni in ### supponendo che il prezzo attuale di Dash (≈&nbsp;§§§) rimanga stabile per un anno.<br>Qualunque sia il prezzo, voi <b>GUADAGNERETE</b> qualcosa finché il vostro masternode funzionerà correttamente.",
   "price-stable": "se il prezzo è stabile",
-  "1-Evonode": "1 Evonode",
   "Evo-collateral": "Gestire un Evonode richiede una cauzione di 4000&nbsp;Đ. Il server che ospita l'Evonode comporta anche delle spese, in genere modeste.",
+  "Evo-collateral-edit": "Regola la cauzione (tra 1 e 4000 Đ) se utilizzi un Evonode condiviso con altri operatori.<br>Se sei l'unico operatore, la tua cauzione è di 4000 Đ.",
   "Evo-varying": "La % di guadagni annuali può variare nel corso di un anno, in funzione in particolare dell'evoluzione del numero totale di Evonodes attivi.<br>Qualunque sia questa %, voi <b>GUADAGNERETE</b> Dash finché il vostro Evonode funzionerà correttamente.",
   "Evo-1-year-simulation": "Questa è una simulazione di guadagni in ### supponendo che il prezzo attuale di Dash (≈&nbsp;§§§) rimanga stabile per un anno.<br>Qualunque sia il prezzo, voi <b>GUADAGNERETE</b> qualcosa finché il vostro Evonode funzionerà correttamente.",
   "earnings-1-year-ago": "Quali sarebbero <span class=\"boldsub\">oggi</span> i miei <span class=\"boldsub\">guadagni</span><br>se avessi avviato un Masternode o un Evonode <span class=\"boldsub\">un anno fa</span>&nbsp;?",
@@ -53,5 +54,6 @@
   "Evo-approx-APY": "Se il vostro Evonode ha funzionato correttamente, ha ricevuto automaticamente questo importo approssimativo di guadagni Dash in un anno.<br>(L'APY medio degli Evonodes negli ultimi 365 giorni era ≈&nbsp;###%.)",
   "Evo-approx-earnings-1-year": "Se aveste avviato il vostro Evonode un anno fa, i suoi guadagni in un anno sarebbero approssimativamente pari a questo importo in ### al prezzo attuale di Dash sul mercato (≈&nbsp;§§§).",
   "4000-worth": "cauzione di 4000&nbsp;#DASH# vale",
-  "4000-worth-today": "La vostra cauzione di 4000&nbsp;Đ acquistata un anno fa varrebbe approssimativamente questo importo in ### al prezzo attuale di Dash sul mercato (≈&nbsp;§§§)."
+  "4000-worth-today": "La vostra cauzione di 4000&nbsp;Đ acquistata un anno fa varrebbe approssimativamente questo importo in ### al prezzo attuale di Dash sul mercato (≈&nbsp;§§§).",
+  "JSalert": "Valore non valido. Inserisci un numero compreso tra "
 }
