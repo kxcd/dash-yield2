@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 // ================================== PARAMETERS ==================================
-$computeURL = "http://localhost".dirname($_SERVER['PHP_SELF'])."/compute.php"; // compute.php delivers JSON stuff
 require "configs/config.php";
 
 // Functions ===============
