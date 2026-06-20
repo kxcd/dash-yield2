@@ -183,7 +183,7 @@ $rawJS = file_get_contents("./languages/" . $lang . ".json"); // gets the right 
 $UItext = json_decode($rawJS, true);
 // we could also modify the link to Dash Docs in the GUI in order to link to the right language
 
-$data=json_decode(file_get_contents($computeURL),true);
+$data=json_decode(exec('php compute.php'),true);
 if (!is_array($data))
 	die("Invalid JSON response (1)");
 
