@@ -183,19 +183,7 @@ $rawJS = file_get_contents("./languages/" . $lang . ".json"); // gets the right 
 $UItext = json_decode($rawJS, true);
 // we could also modify the link to Dash Docs in the GUI in order to link to the right language
 
-
-// Fetch calculated values by compute.php ===============
-$ch = curl_init($computeURL);
-curl_setopt_array($ch, [
-	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_TIMEOUT => 5,
-//	CURLOPT_USERPWD => "username:password", // only for local dev
-]);
-$return = curl_exec($ch);
-if ($return === false)
-	die("cURL error (3) : " . curl_error($ch));
-curl_close($ch);
-$data = json_decode($return, true);
+$data=json_decode(file_get_contents($computeURL),true);
 if (!is_array($data))
 	die("Invalid JSON response (1)");
 
