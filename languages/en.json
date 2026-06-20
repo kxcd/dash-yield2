@@ -24,15 +24,16 @@
   "today": "today",
   "yearly-earnings": "Dash Masternode & Evonode <span class=\"boldsub\">yearly earnings",
   "XKCD-functions": "Percentages computed by XKCD’s functions that are based on current Dash parameters.",
-  "1-masternode": "1 Masternode",
+  "collateral": "collateral",
   "MN-collateral": "Running a masternode requires a Đ&nbsp;1000 collateral. The server running the masternode also involves some costs, usually minor.",
+  "MN-collateral-edit": "Adjust the collateral (between 1 and 1000 Đ) if you are using a shared masternode with other operators.<br>If you are the only operator, your collateral is 1000 Đ.",
   "MN-varying": "The % of yearly earnings may vary throughout one year, depending in particular on variations of the total number of active masternodes.<br>Whatever this % becomes, you <b>WILL</b> earn Dash as long as your masternode is running properly.",
   "percent-stable": "if % is stable",
   "worth": "worth",
   "MN-1-year-simulation": "This is a ### earnings simulation assuming today’s Dash market price (≈&nbsp;§§§) remains stable for one year.<br>Whatever the price becomes, you <b>WILL</b> earn something as long as your masternode is running properly.",
   "price-stable": "if price is stable",
-  "1-Evonode": "1 Evonode",
   "Evo-collateral": "Running an Evonode requires a Đ&nbsp;4000 collateral. The server running the Evonode also involves some costs, usually minor.",
+  "Evo-collateral-edit": "Adjust the collateral (between 1 and 4000 Đ) if you are using a shared Evonode with other operators.<br>If you are the only operator, your collateral is 4000 Đ.",
   "Evo-varying": "The % of yearly earnings may vary throughout one year, depending in particular on variations of the total number of active Evonodes.<br>Whatever this % becomes, you <b>WILL</b> earn Dash as long as your Evonode is running properly.",
   "Evo-1-year-simulation": "This is a ### earnings simulation assuming today’s Dash market price (≈&nbsp;§§§) remains stable for one year.<br>Whatever the price becomes, you <b>WILL</b> earn something as long as your Evonode is running properly.",
   "earnings-1-year-ago": "What would my <span class=\"boldsub\">earnings</span> be <span class=\"boldsub\">today</span><br>if I had started a Masternode or Evonode <span class=\"boldsub\">one year ago</span>&nbsp;?",
@@ -53,5 +54,6 @@
   "Evo-approx-APY": "If your Evonode properly worked, it automatically received this approximate amount of Dash rewards for one year.<br>(The average Evonode APY for the last 365 days was ≈&nbsp;###%.)",
   "Evo-approx-earnings-1-year": "If you had started your Evonode one year ago, its earnings over one year would be approximately worth this ### amount at today's Dash market price (≈&nbsp;§§§).",
   "4000-worth": "#DASH#&nbsp;4000 collateral is worth",
-  "4000-worth-today": "Your Đ&nbsp;4000 collateral, bought one year ago, would be approximately worth this ### amount at today's Dash market price (≈&nbsp;§§§)."
+  "4000-worth-today": "Your Đ&nbsp;4000 collateral, bought one year ago, would be approximately worth this ### amount at today's Dash market price (≈&nbsp;§§§).",
+  "JSalert": "Invalid value. Please enter a number between "
 }

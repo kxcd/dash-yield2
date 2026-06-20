@@ -71,6 +71,9 @@
 		width: 45%;
 		height: auto;
 	}
+	img.tree {
+		display: none;
+	}
 	div.banner {
 		width: 15%;
 		padding: 5px 20px;

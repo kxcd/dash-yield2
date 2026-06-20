@@ -24,15 +24,16 @@
   "today": "hoy",
   "yearly-earnings": "<span class=\"boldsub\">Ingresos anuales</span> de los masternodes &amp; Evonodes Dash",
   "XKCD-functions": "Porcentajes calculados por las funciones de XKCD, basadas en los parámetros actuales de Dash.",
-  "1-masternode": "1 Masternode",
+  "collateral": "garantía",
   "MN-collateral": "Ejecutar un masternode requiere una garantía de 1000&nbsp;Đ. El servidor que aloja el masternode también conlleva gastos, en general modestos.",
+  "MN-collateral-edit": "Ajusta la garantía (entre 1 y 1000 Đ) si estás utilizando un masternode compartido con otros operadores.<br>Si eres el único operador, su garantía es de 1000 Đ.",
   "MN-varying": "El % de ingresos anuales puede variar a lo largo de un año, en función en particular de la evolución del número total de masternodes activos.<br>Sea cual sea ese %, usted <b>GANARÁ</b> Dashs mientras su masternode funcione correctamente.",
   "percent-stable": "si el % es estable",
   "worth": "con un valor de",
   "MN-1-year-simulation": "Esta es una simulación de ingresos en ### suponiendo que el precio actual de Dash (≈&nbsp;§§§) se mantiene estable durante un año.<br>Sea cual sea el precio, usted <b>GANARÁ</b> algo mientras su masternode funcione correctamente.",
   "price-stable": "si el precio es estable",
-  "1-Evonode": "1 Evonode",
   "Evo-collateral": "Ejecutar un Evonode requiere una garantía de 4000&nbsp;Đ. El servidor que aloja el Evonode también conlleva gastos, en general modestos.",
+  "Evo-collateral-edit": "Ajusta la garantía (entre 1 y 4000 Đ) si estás utilizando un Evonode compartido con otros operadores.<br>Si eres el único operador, su garantía es de 4000 Đ.",
   "Evo-varying": "El % de ingresos anuales puede variar a lo largo de un año, en función en particular de la evolución del número total de Evonodes activos.<br>Sea cual sea ese %, usted <b>GANARÁ</b> Dashs mientras su Evonode funcione correctamente.",
   "Evo-1-year-simulation": "Esta es una simulación de ingresos en ### suponiendo que el precio actual de Dash (≈&nbsp;§§§) se mantiene estable durante un año.<br>Sea cual sea el precio, usted <b>GANARÁ</b> algo mientras su Evonode funcione correctamente.",
   "earnings-1-year-ago": "¿&nbsp;Cuáles serían <span class=\"boldsub\">hoy</span> mis <span class=\"boldsub\">ingresos</span><br>si hubiera iniciado un Masternode o un Evonode <span class=\"boldsub\">hace un año</span>&nbsp;?",
@@ -53,5 +54,6 @@
   "Evo-approx-APY": "Si su Evonode ha funcionado correctamente, ha recibido automáticamente esta cantidad aproximada de ingresos Dash durante un año.<br>(El APY medio de los Evonodes en los últimos 365 días era ≈&nbsp;###%.)",
   "Evo-approx-earnings-1-year": "Si hubiera iniciado su Evonode hace un año, sus ganancias en un año serían aproximadamente esta cantidad en ### al precio actual de Dash en el mercado (≈&nbsp;§§§).",
   "4000-worth": "garantía de 4000&nbsp;#DASH# vale",
-  "4000-worth-today": "Su garantía de 4000&nbsp;Đ comprada hace un año valdría aproximadamente esta cantidad en ### al precio actual de Dash en el mercado (≈&nbsp;§§§)."
+  "4000-worth-today": "Su garantía de 4000&nbsp;Đ comprada hace un año valdría aproximadamente esta cantidad en ### al precio actual de Dash en el mercado (≈&nbsp;§§§).",
+  "JSalert": "Valor no válido. Introduzca un número entre "
 }

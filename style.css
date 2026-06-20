@@ -15,6 +15,14 @@
 	font-display: swap;
 }
 @font-face {
+	font-family: 'MontserratSemiBold';
+	src: url('fonts/Montserrat/static/Montserrat-SemiBold.woff2') format('woff2'),
+		 url('fonts/Montserrat/static/Montserrat-SemiBold.ttf') format('truetype');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
 	font-family: 'MontserratSemiBoldItalic';
 	src: url('fonts/Montserrat/static/Montserrat-SemiBoldItalic.woff2') format('woff2'),
 		 url('fonts/Montserrat/static/Montserrat-SemiBoldItalic.ttf') format('truetype');
@@ -27,6 +35,14 @@
 	src: url('fonts/Roboto_Condensed/static/RobotoCondensed-Regular.woff2') format('woff2'),
 		 url('fonts/Roboto_Condensed/static/RobotoCondensed-Regular.ttf') format('truetype');
 	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'RobotoCondensedBold';
+	src: url('fonts/Roboto_Condensed/static/RobotoCondensed-Bold.woff2') format('woff2'),
+		 url('fonts/Roboto_Condensed/static/RobotoCondensed-Bold.ttf') format('truetype');
+	font-weight: 600;
 	font-style: normal;
 	font-display: swap;
 }
@@ -48,9 +64,9 @@ body::before {
 	width: 110%;
 	height: 110%;
 	background-image: url('images/dash-d-circle-1000.png');
+	opacity: 0.08;
 	background-size: cover;
 	background-position: center;
-	opacity: 0.08;
 	z-index: -1;
 }
 table {
@@ -84,6 +100,14 @@ div.title {
 img.logo {
 	width: 230px;
 }
+img.tree {
+	position: absolute;
+	right: 0;
+	bottom: 100%;
+	width: 80px;
+	opacity: 0.3;
+	padding-right: 10px;
+}
 a.refresh {
 	white-space: nowrap;
 	text-decoration: none;
@@ -115,6 +139,14 @@ div.box:hover {
 	transform: scale(1.02);
 	transition: all 0.5s ease-out;
 	box-shadow: 8px 8px 10px 5px rgba(0, 141, 228, 0.3);
+}
+div.box:hover div.subtitle img.tree {
+	width: 105px;
+	opacity: 0.8;
+	transition: all 0.5s ease-out;
+}
+div.box div.subtitle img.tree {
+	transition: all 1s ease-out;
 }
 div.boxborder {
 	border: 2px dotted #008de4;
@@ -165,6 +197,15 @@ div.subsubtitle {
 	top: -20px;
 	white-space: normal;
 }
+span.bold {
+	font-family: 'MontserratSemiBold', sans-serif;
+	font-style: normal;
+	font-weight: 600;
+}
+span.Roboto-bold {
+	font-family: 'RobotoCondensedBold', sans-serif;
+	font-weight: 600;
+}
 span.boldsub {
 	font-family: 'MontserratSemiBoldItalic', sans-serif;
 	font-weight: 600;
@@ -211,7 +252,7 @@ div.box:hover span.subblock div.bubble, div.box:hover div.subtitle div.bubble {
 	transition: background-color 0.5s ease-out;
 }
 img.D {
-	height: 19px;
+	height: 18px;
 	opacity: 0.7;
 }
 div.bubble img.D {
@@ -224,6 +265,7 @@ div.subblock:hover div.bubble, div.bubble:hover {
 }
 span.info {
 	padding-left: 4px;
+	cursor: help;
 }
 span.decimals {
 	font-size: 18px;
@@ -301,10 +343,23 @@ div.pricealert {
 	font-size: 15px;
 	line-height: 21px;
 }
-select.menu, option.menu {
+select.menu, option.menu, input.partial {
 	font-family: 'RobotoCondensedRegular', Arial, sans-serif;
 	font-size: 16px;
 }
+input.partial {
+	width: calc(4ch + 2em);
+	text-align: center;
+	background-color: rgba(255, 255, 255, 0.7);
+	appearance: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+span.earning-update {
+  display: inline-block;
+  animation: bounce-update 0.6s ease-in-out;
+}
+
 
 .tippy-content {
 	font-size: 15px;
@@ -344,5 +399,40 @@ select.menu, option.menu {
 		opacity: 1;
 		transform: scale(1) translateY(0px);
 		
+	}
+}
+@keyframes bounce-update {
+	0%   {
+		transform: scale(1);
+		color: inherit;
+		background-color: inherit;
+	}
+	20%  {
+		transform: scale(1.3);
+		color: #4b7;
+		background: rgba(255, 249, 78, 1);
+		background: radial-gradient(at center, rgba(255, 249, 78, 1), rgba(255, 249, 78, 0));
+	}
+	40%  {
+		transform: scale(1);
+		color: #4b7;
+		background-color: inherit;
+	}
+	60%  {
+		transform: scale(1.3);
+		color: #4b7;
+		background: rgba(255, 249, 78, 1);
+		background: radial-gradient(at center, rgba(255, 249, 78, 1), rgba(255, 249, 78, 0));
+	}
+	80%  {
+		transform: scale(1);
+		color: #4b7;
+		background: rgba(255, 249, 78, 1);
+		background: radial-gradient(at center, rgba(255, 249, 78, 1), rgba(255, 249, 78, 0));
+	}
+	100% {
+		transform: scale(1);
+		color: inherit;
+		background-color: inherit;
 	}
 }
