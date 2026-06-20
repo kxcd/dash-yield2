@@ -1,0 +1,119 @@
+  372  git clone https://github.com/node-fetch/node-fetch
+  846  wget https://github.com/dashpay/platform/releases/download/v1.0.1/drive-abci-1.0.1-x86_64-linux-gnu.tar.gz
+ 1072  wget https://github.com/fullstorydev/grpcurl/releases/download/v1.9.1/grpcurl_1.9.1_linux_amd64.deb
+ 1076  git clone https://github.com/dashpay/platform/
+ 1427  a=$(curl -s --fail-with-body https://rpc.digitalcash.dev/ -H "Content-Type: application/json" --data-binary '{"method": "masternodelist","params": []}')
+ 1432  masternode_list=$(curl -s https://rpc.digitalcash.dev/ -H "Content-Type: application/json" --data-binary '{"method": "masternodelist","params": []}')
+ 1905  git clone https://github.com/dashpay/platform/
+ 1965  git clone https://github.com/dashpay/platform/
+ 2242  git clone https://github.com/dashpay/platform/
+ 2320  git clone https://github.com/grpc/grpc
+ 2342  git submodule update --init
+ 2501  cat .git 
+ 2902  rm .git 
+ 3348  wget https://github.com/dashpay/tenderdash/releases/download/v1.2.1/tenderdash-1.2.1-linux-amd64.tar.gz
+ 6634  cp Dash-yield-masternode-Evonode-earnings/images/dash_digitalcash.png images/
+ 6841  git clone https://github.com/dashpay/platform/
+ 7663  wget https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_amd64.deb
+ 7711  git clone -maxdepth 1 https://github.com/dashpay/platform/
+ 7712  git clone -maxdepth=1 https://github.com/dashpay/platform/
+ 7713  git clone --maxdepth 1 https://github.com/dashpay/platform/
+ 7714  git clone --maxdepth=1 https://github.com/dashpay/platform/
+ 7715  man git
+ 7717  git clone https://github.com/dashpay/platform/
+ 9226  git
+ 9245  git config --global credential.helper store
+ 9246  ll ~/.gitconfig 
+ 9247  vi ~/.gitconfig 
+ 9249  find ~ |grep git
+ 9251  git config --global user.email
+ 9252  git config --global user.email "xkcd@optusnet.com.au"
+ 9253  git config --global user.name "kxcd"
+ 9255  git init
+ 9256  git config --global init.defaultBranch main
+ 9257  git branch -m main
+ 9259  ll .git/
+ 9260  git branch -M main
+ 9262  vi .gitignore
+ 9263  git add .
+ 9264  git commit -m "Initial commit"
+ 9265  git remote add origin https://github.com/kxcd/dash-yield2.git
+ 9266  git push -u origin main
+ 9345  git add
+ 9346  git add .
+ 9347  git commit -m "Fix errors"
+ 9348  git status
+ 9349  git push origin main
+ 9355  git status
+ 9356  vi .gitignore 
+ 9357  git status
+ 9358  git pull origin main
+ 9359  git status
+ 9360  git add .
+ 9361  git status
+ 9398  git status
+ 9399  git pull origin main
+ 9400  git stash
+ 9401  git pull origin main
+ 9403  git status
+ 9404  vi .gitignore 
+ 9405  git status
+ 9406  git commit -a
+ 9407  git commit -m "stuff"
+ 9408  git add .
+ 9409  git status
+ 9410  git commit -m "stuff"
+ 9411  git push origin main
+ 9428  git status
+ 9429  git diff
+ 9430  git commit -m "Remove unnecessary type conversion"
+ 9432  vi .gitignore 
+ 9433  git add .
+ 9434  git status
+ 9435  git commit -m "Remove unnecessary type conversion"
+ 9436  git status
+ 9437  git push origin main
+ 9499  git commit -m "Improve documentation and isolate development flag"
+ 9500  vi .gitignore 
+ 9501  git add .
+ 9502  git status
+ 9503  git commit -m "Improve documentation and isolate development flag"
+ 9504  vi .git
+ 9505  vi .gitignore 
+ 9506  git status
+ 9507  git add .
+ 9508  git commit -m "Improve documentation and isolate development flag"
+ 9509  git push origin main
+ 9531  git status
+ 9532  cat .gitignore 
+ 9533  git pull origin main
+ 9585  git statusw
+ 9586  git status
+ 9587  git pull origin main
+ 9591  git pull origin main
+ 9594  git commit -m ":(vi compute.php "
+ 9595  git push origin main
+ 9596  git add .
+ 9597  git commit -m ":(\!\!"
+ 9598  git push origin main
+10078  git
+10084  history |grep git|less
+10085  git add .
+10086  history |grep git|less
+10087  git status
+10088  history |grep git|less
+10089  git init
+10090  git add .
+10091  git status
+10092  git commit -m "first"
+10094  git diff
+10176  git status
+10181  git status
+10182  git pull origin main
+10184  git status
+10185  vi .gitignore 
+10187  git rm --cached cache/APYhistory.json
+10188  git rm --cached cache/lastPrices.json
+10189  git status
+10191  git commit -m "Remove development flag"
+10195  history |grep git|less

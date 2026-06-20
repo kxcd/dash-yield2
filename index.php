@@ -1,5 +1,4 @@
 <?php declare(strict_types=1);
-$development_mode = TRUE;
 
 // ================================== PARAMETERS ==================================
 $computeURL = "http://localhost".dirname($_SERVER['PHP_SELF'])."/compute.php"; // compute.php delivers JSON stuff
