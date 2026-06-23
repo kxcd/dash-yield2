@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-$development_mode = true;
+// $development_mode = true;
 // ================================== PARAMETERS ==================================
 require "configs/config.php";
 
