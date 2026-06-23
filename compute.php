@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 // ================================== PARAMETERS ==================================
-require "configs/.config-compute.php"; // for connection to Dash Core (RPC), CoinGecko (API key) and ExchangeRate-API (API key)
+require "configs/.config-compute.php"; // for connection to Dash Core (RPC), CoinGecko (API key)
 require "configs/config.php"; // for fiat currencies & languages list
 
 
@@ -84,10 +84,10 @@ if ($file_exists) {
 		$data_temp = json_decode($rawContent, true);
 		if ($data_temp !== null) {
 			$JSON["lastPrices"] = $data_temp;
-			$JSON["lastPrices"]["status"] = "JSON read";
+			$JSON["lastPrices"]["status"][] = "JSON read";
 		} else {
 			$JSON["lastPrices"] = [];
-			$JSON["lastPrices"]["status"] = "JSON corrupted, trying to refresh";
+			$JSON["lastPrices"]["status"][] = "JSON corrupted, trying to refresh";
 		}
 }
 
@@ -102,54 +102,71 @@ if ($needs_initial_fetch ||
 if ($needs_price_update) {
 	$JSON["lastPrices"]["USD"]["source"] = "CoinGecko";
 	try {
-		$url = "https://api.coingecko.com/api/v3/coins/dash/market_chart?vs_currency=usd&days=365&x_cg_demo_api_key=" . $CoinGeckoAPIkey;
-		$data = http_get_json($url);
+		$data = http_get_json("https://api.coingecko.com/api/v3/coins/dash/market_chart?vs_currency=usd&days=365&x_cg_demo_api_key=" . $CoinGeckoAPIkey);
 		if (isset($data["prices"]) && is_array($data["prices"])) {
 			$prices = $data["prices"];
 			$JSON["lastPrices"]["USD"]["time"] = ["timestamp" => $now, "readable" => date("Y-m-d H:i:s", $now)];
 			$JSON["lastPrices"]["USD"]["365d"] = round($prices[0][1], 2);
 			$JSON["lastPrices"]["USD"]["current"] = round($prices[count($prices) - 1][1], 2);
-			$JSON["lastPrices"]["USD"]["status"] = "Dash/USD price refreshed";
+			$JSON["lastPrices"]["USD"]["status"][] = "Dash/USD price refreshed";
 		}
 	} catch (Exception $e) {
-		$JSON["lastPrices"]["USD"]["status"] = "Fetch failed: " . $e->getMessage();
+		$JSON["lastPrices"]["USD"]["status"][] = "Fetch failed: " . $e->getMessage();
 	}
 }
 
-// Exchange rates update (ExchangeRate-API) if missing or outdated
+// Exchange rates update (Frankfurter.dev) if missing or outdated
 $needs_exchange_update = false;
 if (!isset($JSON["lastPrices"]["conversion_rates"]) || !isset($JSON["lastPrices"]["conversion_rates"]["time"]["timestamp"]) || ($now - $JSON["lastPrices"]["conversion_rates"]["time"]["timestamp"]) > ($hoursExchangeRate * 60 * 60)) {
 	$needs_exchange_update = true;
 }
 if ($needs_exchange_update) {
-	try {
-		$url_exchange = "https://v6.exchangerate-api.com/v6/" . $ExchangeRateAPIKey . "/latest/USD";
-		$data_exch = http_get_json($url_exchange);
-		if (isset($data_exch["conversion_rates"])) {
-			$JSON["lastPrices"]["conversion_rates"] = [
-				"source" => "ExchangeRate-API",
-				"time" => [
-					"timestamp" => $now,
-					"readable" => date("Y-m-d H:i:s", $now)
-				]
-			];
-			foreach (array_keys($fiatcurrencies) as $f) {
-				if (!isset($data_exch["conversion_rates"][$f])) {
-					$JSON["lastPrices"]["conversion_rates"]["status"] = "Warning: missing rate for " . $f;
+	$JSON["lastPrices"]["conversion_rates"] = [
+		"source" => "Frankfurter.dev",
+		"time" => [
+			"timestamp" => $now,
+			"readable" => date("Y-m-d H:i:s", $now)
+		]
+	];
+	$exch_rate_dates = array("now" => $now, "one-year-ago" => ($now - (365 * 24 * 60 * 60)));
+	foreach ($exch_rate_dates as $datename => $datestamp) {
+		try {
+			if ($datename == "one-year-ago")
+				$data_exch_get = "&date=" . date("Y-m-d", $datestamp);
+			else
+				$data_exch_get = "";
+			$data_exch = http_get_json("https://api.frankfurter.dev/v2/rates?base=USD" . $data_exch_get);
+			if (is_array($data_exch) and !empty($data_exch)) {
+				$JSON["lastPrices"]["conversion_rates"][$datename] = [
+					"time" => [
+						"timestamp" => $datestamp,
+						"readable" => date("Y-m-d H:i:s", $datestamp)
+					]
+				];
+				$JSON["lastPrices"]["conversion_rates"][$datename]["USD"] = 1;
+				foreach ($data_exch as $row) { // Harvest exchange rates for followed fiat currencies
+					if (in_array($row["quote"], array_keys($fiatcurrencies)))
+						$JSON["lastPrices"]["conversion_rates"][$datename][$row["quote"]] = (float)$row["rate"];
+				}			
+				foreach (array_keys($fiatcurrencies) as $f) { // Check if some followed fiat are missing
+					if (!isset($JSON["lastPrices"]["conversion_rates"][$datename][$f])) {
+						$JSON["lastPrices"]["conversion_rates"][$datename]["status"][] = "Warning: missing rate for " . $f;
+					}
 				}
-				$JSON["lastPrices"]["conversion_rates"][$f] = $data_exch["conversion_rates"][$f] ?? 1.0;
+				$JSON["lastPrices"]["conversion_rates"][$datename]["status"][] = "Conversion rates refreshed";
 			}
-			$JSON["lastPrices"]["conversion_rates"]["status"] = "Conversion rates refreshed";
+		} catch (Exception $e) {
+			$JSON["lastPrices"]["conversion_rates"][$datename]["status"][] = "Exchange update failed: " . $e->getMessage();
 		}
-	} catch (Exception $e) {
-		$JSON["lastPrices"]["conversion_rates"]["status"] = "Exchange update failed: " . $e->getMessage();
 	}
 }
 
 // Saving lastPrices.json 
 if ($needs_price_update || $needs_exchange_update) {
-	file_put_contents("cache/lastPrices.json", json_encode($JSON["lastPrices"], JSON_PRETTY_PRINT), LOCK_EX); // maybe we should prevent saving failures
-	$JSON["lastPrices"]["status"] = "JSON saved";
+	if (!file_put_contents("cache/lastPrices.json", json_encode($JSON["lastPrices"], JSON_PRETTY_PRINT), LOCK_EX))
+		$JSON["lastPrices"]["status"][] = "failed to save JSON";
+	else
+		$JSON["lastPrices"]["status"][] = "JSON saved";
 }
 
 
@@ -191,7 +208,7 @@ foreach ($collateral as $type => $amount) {
 	$JSON["rewards"]["yearly"][$type]["DASH"] = round(($JSON["APY"][$now][$type] / 100) * $collateral[$type], 8);
 	foreach (array_keys($fiatcurrencies) as $fiatcurrency) {
 		$currentfiat = strtoupper($fiatcurrency); 
-		$rate = $JSON["lastPrices"]["conversion_rates"][$currentfiat] ?? 1.0;
+		$rate = $JSON["lastPrices"]["conversion_rates"]["now"][$currentfiat] ?? 1.0;
 		$JSON["rewards"]["yearly"][$type][$currentfiat] = round($JSON["rewards"]["yearly"][$type]["DASH"] * $dashPriceUSD * $rate, 0);
 	}
 	
@@ -199,7 +216,7 @@ foreach ($collateral as $type => $amount) {
 	$dashPrice365d = $JSON["lastPrices"]["USD"]["365d"];
 	foreach (array_keys($fiatcurrencies) as $fiatcurrency) {
 		$currentfiat = strtoupper($fiatcurrency); 
-		$rate = $JSON["lastPrices"]["conversion_rates"][$currentfiat] ?? 1.0;
+		$rate = $JSON["lastPrices"]["conversion_rates"]["now"][$currentfiat] ?? 1.0;
 
 		$historiqueAPY = json_decode(file_get_contents("cache/APYhistory.json"), true);
 		$rewardspast365d = calculateInterestAndAPY($historiqueAPY, ($now - (365 * 24 * 60 * 60)), $now, $type, $collateral[$type]);

@@ -323,7 +323,7 @@ foreach ($collateralvalue as $type => $stuff) {
 			<?php echo $UItext["today"]; ?>
 			<span class="info">ℹ️</span>
 		</div>
-		<img src="images/Dash-yield.png" alt="Dash money tree" class="tree">
+		<img src="images/Dash-yield.png" class="tree">
 	</div>
 
 	<!-- 1 Masternode ============ -->
