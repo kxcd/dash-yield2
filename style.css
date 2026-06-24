@@ -141,7 +141,7 @@ div.box:hover {
 	box-shadow: 8px 8px 10px 5px rgba(0, 141, 228, 0.3);
 }
 div.box:hover div.subtitle img.tree {
-	width: 105px;
+	width: 95px;
 	opacity: 0.8;
 	transition: all 0.5s ease-out;
 }
@@ -200,11 +200,11 @@ div.subsubtitle {
 span.bold {
 	font-family: 'MontserratSemiBold', sans-serif;
 	font-style: normal;
-	font-weight: 600;
+	font-weight: 600 !important;
 }
 span.Roboto-bold {
 	font-family: 'RobotoCondensedBold', sans-serif;
-	font-weight: 600;
+	font-weight: 600 !important;
 }
 span.boldsub {
 	font-family: 'MontserratSemiBoldItalic', sans-serif;
@@ -333,6 +333,10 @@ span.arrow {
 }
 span.about {
 	color: #888;
+}
+span.peryear {
+	color: #888;
+	font-size: clamp(12px, 1.0vw + 10px, 17px);
 }
 div.pricealert {
 	display: inline-block;

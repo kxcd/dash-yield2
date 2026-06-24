@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-
+// $development_mode = true;
 // ================================== PARAMETERS ==================================
 require "configs/config.php";
 
@@ -105,11 +105,19 @@ function parse_accept_language(string $header): array{
 	return $parsed;
 }
 
+function boldify(string $sometext, string $font):string { // fix bold problems in Chrome/Firefox with @font-face
+	if (strlen($font) > 0)
+		$bold = $font . "-bold";
+	else
+		$bold = "bold";
+	return str_replace(array("<b>", "</b>"), array("<span class='" . $bold . "'><b>", "</b></span>"), $sometext);
+}
+
 
 
 
 // Selected fiat currency ===============
-$fiat = "USD"; // default, except if cookie
+$fiat = "USD"; // default
 if (isset($_COOKIE["fiat"]) && in_array($_COOKIE["fiat"], array_keys($fiatcurrencies))) { // cookie
 	$fiat = $_COOKIE["fiat"];
 }
@@ -180,16 +188,16 @@ if (!file_exists("./languages/" . $lang . ".json"))
 	$lang = "en"; // default if missing JSON
 $rawJS = file_get_contents("./languages/" . $lang . ".json"); // gets the right JSON language file
 $UItext = json_decode($rawJS, true);
-// we could also modify the link to Dash Docs in the GUI in order to link to the right language
 
 $data=json_decode(exec('php compute.php'),true);
 if (!is_array($data))
 	die("Invalid JSON response (1)");
 
 $APY = reset($data["APY"]);
-$USDprice[$fiat] = $data["lastPrices"]["conversion_rates"][$fiat];
-$currentprice[$fiat] = round($data["lastPrices"]["USD"]["current"] * $USDprice[$fiat], 2);
-$past365dprice[$fiat] = round($data["lastPrices"]["USD"]["365d"] * $USDprice[$fiat], 2); // it would be smarter to get *past* USD/fiat price
+$currentUSDprice[$fiat] = $data["lastPrices"]["conversion_rates"]["now"][$fiat];
+$past365USDprice[$fiat] = $data["lastPrices"]["conversion_rates"]["one-year-ago"][$fiat];
+$currentprice[$fiat] = round($data["lastPrices"]["USD"]["current"] * $currentUSDprice[$fiat], 2);
+$past365dprice[$fiat] = round($data["lastPrices"]["USD"]["365d"] * $past365USDprice[$fiat], 2);
 $daysago365 = date("jS F Y", $data["lastPrices"]["USD"]["time"]["timestamp"] - (365 * 24 * 60 * 60));
 
 // Check if CoinGecko sent the price
@@ -258,13 +266,13 @@ foreach ($collateralvalue as $type => $stuff) {
 	</a>
 	<br><span class="blue"><?php echo $UItext["MN-Evo-earnings-b"]; ?></span>
 	<p class="small">
-		<?php echo str_replace(array("###", "<b>", "</b>"), array(floor((time() - strtotime("2014-01-18 00:00:00")) / (365 * 24 * 60 * 60)), "<span class=\"Roboto-bold\"><b>", "</b></span>"), $UItext["proven-crypto"]); ?>
-		<br><?php echo str_replace(array("<b>", "</b>"), array("<span class=\"Roboto-bold\"><b>", "</b></span>"), $UItext["servers"]); ?>
+		<?php echo str_replace("###", (string) floor((time() - strtotime("2014-01-18 00:00:00")) / (365 * 24 * 60 * 60)), boldify($UItext["proven-crypto"], "Roboto")); ?>
+		<br><?php echo boldify($UItext["servers"], "Roboto"); ?>
 		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
 	</p>
 	<p class="smaller">
 		<br><?php echo str_replace("###", (string)"<span class=\"Roboto-bold\">" . date("d M. Y, H:i") . "</span>", $UItext["page-refreshed"]); ?>
-		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a> <?php echo str_replace("###", (string)$UItext["disclaimer"], $UItext["disclaimer-link"]); ?>
+		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a> <?php echo str_replace("###", (string) boldify($UItext["disclaimer"], ""), $UItext["disclaimer-link"]); ?>
 		<br><span class="Roboto-bold"><b><?php echo $UItext["hover-any"]; ?></b></span>
 	</p>
 	
@@ -297,13 +305,13 @@ foreach ($collateralvalue as $type => $stuff) {
 <!-- MARKET PRICE box ================================= -->
 <div class="box boxborder boxunfold">
 	<div class="subtitle"><span class="bold">📊</span>&nbsp;&nbsp;<?php echo $UItext["market-price"]; ?>
-		<div class="bubble" data-tippy-content="<?php echo $UItext["provided-CoinGecko"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["USD"]["time"]["timestamp"]); ?>.<br>(<?php echo $UItext["provided-ExchangeRate"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["conversion_rates"]["time"]["timestamp"]); ?>.)">
+		<div class="bubble" data-tippy-content="<?php echo $UItext["provided-CoinGecko"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["USD"]["time"]["timestamp"]); ?>.<br>(<?php echo $UItext["provided-Frankfurter"]; ?>, <?php echo date("jS F Y, H:i", $data["lastPrices"]["conversion_rates"]["now"]["time"]["timestamp"]); ?>.)">
 			<?php echo $UItext["today"]; ?>
 			<span class="info">ℹ️</span>
 		</div>
 	</div>
 	<span class="subblock">
-		<span class="blue bigger"><b><?php echo pretty($currentprice[$fiat], 2) . "</b></span> " . $fiatcurrencies[$fiat]["symbol"]; ?> / <img alt="Đ" src="images/black-d-250.png" class="D">
+		<span class="blue bigger bold"><span class="bold"><b><?php echo pretty($currentprice[$fiat], 2) . "</b></span></span> " . $fiatcurrencies[$fiat]["symbol"]; ?> / <img alt="Đ" src="images/black-d-250.png" class="D">
 		<?php echo $pricealert; ?>
 	</span>
 </div>
@@ -315,13 +323,14 @@ foreach ($collateralvalue as $type => $stuff) {
 			<?php echo $UItext["today"]; ?>
 			<span class="info">ℹ️</span>
 		</div>
-		<img src="images/Dash-yield.png" alt="Dash money tree" class="tree">
+		<img src="images/Dash-yield.png" class="tree">
 	</div>
 
 	<!-- 1 Masternode ============ -->
 	<div class="subblock" data-tippy-content="<?php echo $UItext["MN-collateral"]; ?>">
-		<span class="bold"><b>1 Masternode</b></span>, <?php echo $UItext["collateral"]; ?> 
-		<img alt="Đ" src="images/black-d-250.png" class="D"><input id="coll-MN" type="number" value="1000" min="1" max="1000" placeholder="1000" class="partial" onInput="partial('MN');" data-tippy-content="<?php echo $UItext["MN-collateral-edit"]; ?>" data-tippy-placement="bottom">
+		<span class="bold"><b><span id="MN-number">1</span> Masternode</b></span>, <?php echo $UItext["collateral"]; ?> 
+		<img alt="Đ" src="images/black-d-250.png" class="D">
+		<input id="coll-MN" type="number" value="1000" min="1" step="any" placeholder="1000" data-last-valid="1000" class="partial" onInput="partial('MN');" data-tippy-content="<?php echo $UItext["MN-collateral-edit"]; ?>" data-tippy-placement="bottom">
 		<span class="info">ℹ️</span>
 	</div>
 	<div class="subblock">
@@ -329,16 +338,16 @@ foreach ($collateralvalue as $type => $stuff) {
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["MN"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
 		<span class="about">≈</span>&nbsp;<img alt="Đ" src="images/black-d-250.png" class="D"> 
-		<span id="MN-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["MN"]["DASH"]; ?>"><?php echo pretty($data["rewards"]["yearly"]["MN"]["DASH"], 1) ; ?></span>
-		<div class="bubble" data-tippy-content="<?php echo $UItext["MN-varying"]; ?>">
+		<span id="MN-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["MN"]["DASH"]; ?>"><?php echo pretty($data["rewards"]["yearly"]["MN"]["DASH"], 1) ; ?></span><span class="peryear">&nbsp;/&nbsp;<?php echo $UItext["year"]; ?></span>
+		<div class="bubble" data-tippy-content="<?php echo boldify($UItext["MN-varying"], ""); ?>">
 				<?php echo $UItext["percent-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
 	<div class="subblock right">
 		<span class="arrow">↪︎</span> 
-		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"]; ?> <span id="MN-fiat-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["MN"][$fiat]; ?>"><?php echo pretty(round($data["rewards"]["yearly"]["MN"][$fiat], 0), 0); ?></span>
-		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["MN-1-year-simulation"]); ?>">
+		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"]; ?> <span id="MN-fiat-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["MN"][$fiat]; ?>"><?php echo pretty(round($data["rewards"]["yearly"]["MN"][$fiat], 0), 0); ?></span><span class="peryear">&nbsp;/&nbsp;<?php echo $UItext["year"]; ?></span>
+		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), boldify($UItext["MN-1-year-simulation"], "") ); ?>">
 				<?php echo $UItext["price-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
@@ -348,8 +357,9 @@ foreach ($collateralvalue as $type => $stuff) {
 	
 	<!-- 1 Evonode ============ -->
 	<div class="subblock" data-tippy-content="<?php echo $UItext["Evo-collateral"]; ?>">
-		<span class="bold"><b>1 Evonode</b></span>, <?php echo $UItext["collateral"]; ?> 
-		<img alt="Đ" src="images/black-d-250.png" class="D"><input id="coll-Evo" type="number" value="4000" min="1" max="4000" placeholder="4000" class="partial" onInput="partial('Evo');" data-tippy-content="<?php echo $UItext["Evo-collateral-edit"]; ?>" data-tippy-placement="bottom">
+		<span class="bold"><b><span id="Evo-number">1</span> Evonode</b></span>, <?php echo $UItext["collateral"]; ?> 
+		<img alt="Đ" src="images/black-d-250.png" class="D">
+		<input id="coll-Evo" type="number" value="4000" min="1" step="any" placeholder="4000" data-last-valid="4000" class="partial" onInput="partial('Evo');" data-tippy-content="<?php echo $UItext["Evo-collateral-edit"]; ?>" data-tippy-placement="bottom">
 		<span class="info">ℹ️</span>
 	</div>
 	<div class="subblock">
@@ -357,17 +367,16 @@ foreach ($collateralvalue as $type => $stuff) {
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["Evo"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
 		<span class="about">≈</span>&nbsp;<img alt="Đ" src="images/black-d-250.png" class="D"> 
-		<span id="Evo-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["Evo"]["DASH"]; ?>"><?php echo pretty($data["rewards"]["yearly"]["Evo"]["DASH"], 1) ; ?></span>
-		<div class="bubble" data-tippy-content="<?php echo $UItext["Evo-varying"]; ?>">
+		<span id="Evo-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["Evo"]["DASH"]; ?>"><?php echo pretty($data["rewards"]["yearly"]["Evo"]["DASH"], 1) ; ?></span><span class="peryear">&nbsp;/&nbsp;<?php echo $UItext["year"]; ?></span>
+		<div class="bubble" data-tippy-content="<?php echo boldify($UItext["Evo-varying"], ""); ?>">
 				<?php echo $UItext["percent-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
 	</div>
 	<div class="subblock right">
 		<span class="arrow">↪︎</span> 
-
-		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"]; ?> <span id="Evo-fiat-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["Evo"][$fiat]; ?>"><?php echo pretty(round($data["rewards"]["yearly"]["Evo"][$fiat], 0), 0); ?></span>
-		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["Evo-1-year-simulation"]); ?>">
+		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<?php echo $fiatcurrencies[$fiat]["symbol"]; ?> <span id="Evo-fiat-earning" data-placeholder="<?php echo $data["rewards"]["yearly"]["Evo"][$fiat]; ?>"><?php echo pretty(round($data["rewards"]["yearly"]["Evo"][$fiat], 0), 0); ?></span><span class="peryear">&nbsp;/&nbsp;<?php echo $UItext["year"]; ?></span>
+		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), boldify($UItext["Evo-1-year-simulation"], "")); ?>">
 				<?php echo $UItext["price-stable"]; ?>
 				<span class="info">ℹ️</span>
 		</div>
