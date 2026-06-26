@@ -268,7 +268,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	<p class="small">
 		<?php echo str_replace("###", (string) floor((time() - strtotime("2014-01-18 00:00:00")) / (365 * 24 * 60 * 60)), boldify($UItext["proven-crypto"], "Roboto")); ?>
 		<br><?php echo boldify($UItext["servers"], "Roboto"); ?>
-		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
+		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/<?php echo $lang;?>/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
 	</p>
 	<p class="smaller">
 		<br><?php echo str_replace("###", (string)"<span class=\"Roboto-bold\">" . date("d M. Y, H:i") . "</span>", $UItext["page-refreshed"]); ?>
@@ -288,7 +288,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	<div class="box boxborder boxsmall">
 		<div class="subtitle subsubtitle"><span class="bold">👋</span> <?php echo $UItext["info-help"]; ?></div>
 		<p class="small">
-			<a href="https://www.dash.org/" target="_blank"><span class="Roboto-bold"><b>Dash.org</b></span></a> | <a href="https://docs.dash.org/<?php echo $lang; ?>/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <a href="https://discordapp.com/invite/PXbUxJB" target="_blank"><span class="Roboto-bold"><b>Dash Discord</b></span></a> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
+			<a href="https://www.dash.org/<?php echo $lang;?>/" target="_blank"><span class="Roboto-bold"><b>Dash.org</b></span></a> | <a href="https://docs.dash.org/<?php echo $lang; ?>/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <a href="https://discordapp.com/invite/PXbUxJB" target="_blank"><span class="Roboto-bold"><b>Dash Discord</b></span></a> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
 		</p>
 	</div>
 	
@@ -334,7 +334,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<span class="info">ℹ️</span>
 	</div>
 	<div class="subblock">
-		<span class="arrow">→</span> 
+		<span class="arrow newline">→</span> 
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["MN"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
 		<span class="about">≈</span>&nbsp;<img alt="Đ" src="images/black-d-250.png" class="D"> 
@@ -363,7 +363,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<span class="info">ℹ️</span>
 	</div>
 	<div class="subblock">
-		<span class="arrow">→</span> 
+		<span class="arrow newline">→</span> 
 		<span class="green"><span class="about">≈</span>&nbsp;<?php echo pretty($APY["Evo"], 2); ?> %</span> 
 		<span class="arrow">→</span> 
 		<span class="about">≈</span>&nbsp;<img alt="Đ" src="images/black-d-250.png" class="D"> 
@@ -397,7 +397,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<span class="bold"><b>1 Masternode</b></span>
 	</span>
 	<div class="subblock">
-		<span class="arrow">→</span> 
+		<span class="arrow newline">→</span> 
 		<?php echo $UItext["I-bought"]; ?> <?php echo str_replace("#DASH#", (string)"<img alt=\"Đ\" src=\"images/black-d-250.png\" class=\"D\">", $UItext["1000-collateral"]); ?>
 		<?php echo "<span class=\"about\">≈</span>&nbsp;" . $fiatcurrencies[$fiat]["symbol"] . " " . pretty($collateralvalue["MN"][$fiat]["365d"], 0); ?>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§", "@@@"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($past365dprice[$fiat], 2), $daysago365), $UItext["approx-MN-collateral-1-year-ago"]); ?>">
@@ -415,7 +415,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		</div>
 	</div>
 	<div class="subblock">
-		<span class="arrow">→</span> 
+		<span class="arrow newline">→</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><?php echo $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty(round($data["simulationpast365d"]["rewardspast365d"]["MN"][$fiat], 0), 0); ?></span>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["MN-approx-earnings-1-year"]); ?>">
 				<?php echo $UItext["today"]; ?>
@@ -439,7 +439,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<span class="bold"><b>1 Evonode</b></span>
 	</span>
 	<div class="subblock">
-		<span class="arrow">→</span> 
+		<span class="arrow newline">→</span> 
 		<?php echo $UItext["I-bought"]; ?> <?php echo str_replace("#DASH#", (string)"<img alt=\"Đ\" src=\"images/black-d-250.png\" class=\"D\">", $UItext["4000-collateral"]); ?> 
 		<?php echo "<span class=\"about\">≈</span>&nbsp;" . $fiatcurrencies[$fiat]["symbol"] . " " . pretty($collateralvalue["Evo"][$fiat]["365d"], 0); ?>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§", "@@@"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($past365dprice[$fiat], 2), $daysago365), $UItext["approx-Evo-collateral-1-year-ago"]); ?>">
@@ -457,7 +457,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		</div>
 	</div>
 	<div class="subblock">
-		<span class="arrow">→</span> 
+		<span class="arrow newline">→</span> 
 		<?php echo $UItext["worth"]; ?> <span class="about">≈</span>&nbsp;<span class="green"><?php echo $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . pretty(round($data["simulationpast365d"]["rewardspast365d"]["Evo"][$fiat], 0), 0); ?></span>
 		<div class="bubble" data-tippy-content="<?php echo str_replace(array("###", "§§§"), array($fiatcurrencies[$fiat]["symbol"], $fiatcurrencies[$fiat]["symbol"] . "&nbsp;" . number_format($currentprice[$fiat], 2)), $UItext["Evo-approx-earnings-1-year"]); ?>">
 				<?php echo $UItext["today"]; ?>
