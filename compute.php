@@ -194,8 +194,8 @@ if (file_exists("cache/APYhistory.json") and is_numeric($JSON["APY"][$now]["MN"]
 			if (!fwrite($handle, json_encode($historiqueAPY)))
 				echo "ERROR: history recording impossible";
 		}
-		fclose($handle);
 	}
+	fclose($handle);
 }
 
 

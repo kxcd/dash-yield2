@@ -1,4 +1,6 @@
-<?php
+<?php declare(strict_types=1);
+
+require ".config-compute.php";
 
 // Fiat currencies (ordered by world volume)
 $fiatcurrencies = array(
@@ -74,7 +76,6 @@ date_default_timezone_set("Europe/Paris"); // how to manage that ?
 
 
 // Development mode (FALSE or TRUE)
-error_reporting('0');
 if ($development_mode) { 
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
