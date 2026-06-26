@@ -229,18 +229,18 @@ foreach ($collateralvalue as $type => $stuff) {
 		<meta name="description" content="Dash yield, masternodes and Evonodes earnings calculator.">
 		<meta property="og:title" content="Dash yield - masternodes and Evonodes earnings">
 		<meta property="og:url" content="https://<?php echo $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; ?>">
-		<meta property="og:image" content="images/favicons/favicon-192.png">
+		<meta property="og:image" content="images/favicons/favicon-192-new.png">
 		<meta property="og:type" content="website">
 		<meta property="og:description" content="Dash yield, masternodes and Evonodes earnings calculator.">
 		<meta property="og:locale" content="en_US">
 		<link rel="icon" href="images/favicons/favicon-32.png" sizes="32x32">
-		<link rel="icon" href="images/favicons/favicon-128.png" sizes="128x128">
-		<link rel="icon" href="images/favicons/favicon-192.png" sizes="192x192">
+		<link rel="icon" href="images/favicons/favicon-128-new.png" sizes="128x128">
+		<link rel="icon" href="images/favicons/favicon-192-new.png" sizes="192x192">
 		<!-- Android -->
-		<link rel="shortcut icon" sizes="192x192" href="images/favicons/favicon-192.png">
+		<link rel="shortcut icon" sizes="192x192" href="images/favicons/favicon-192-new.png">
 		<!-- iOS -->
-		<link rel="apple-touch-icon" href="images/favicons/favicon-128.png" sizes="128x128">
-		<link rel="apple-touch-icon" href="images/favicons/favicon-192.png" sizes="192x192">
+		<link rel="apple-touch-icon" href="images/favicons/favicon-128-new.png" sizes="128x128">
+		<link rel="apple-touch-icon" href="images/favicons/favicon-192-new.png" sizes="192x192">
 		<link rel="stylesheet" href="style.css<?php echo $renewCSS; ?>" type="text/css">
 		<link rel="stylesheet" href="style-smartphone.css<?php echo $renewCSS; ?>" type="text/css">
 		<script src="JS/scripts.js<?php echo $renewCSS; ?>"></script>

@@ -69,7 +69,13 @@ $country_currency = array(
 
 
 // Dash Yield GUI languages
-$langnames = array("en" => "English", "fr" => "français", "es" => "español", "it" => "italiano", "pl" => "polski");
+$langnames = array(
+	"en" => "English", 
+	"fr" => "français", 
+	"es" => "español", 
+	"it" => "italiano", 
+	"pl" => "polski"
+);
 
 
 date_default_timezone_set("Europe/Paris"); // how to manage that ?
