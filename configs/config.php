@@ -77,6 +77,47 @@ $langnames = array(
 	"pl" => "polski"
 );
 
+// Dash.org existing translations (on 27th June 2026)
+$DashOrgTranslations = array(
+	"en" => "en", 
+	"el" => "el",
+	"fil" => "fil", 
+	"it" => "it", 
+	"pl" => "pl", 
+	"ru" => "ru", 
+	"tr" => "tr", 
+	"th" => "th", 
+	"fa" => "fa", 
+	"de" => "de", 
+	"es" => "es", 
+	"fr" => "fr", 
+	"nl" => "nl", 
+	"vi" => "vi", 
+	"uk" => "uk", 
+	"ja" => "ja", 
+	"ar" => "ar", 
+	"ko" => "ko", 
+	"zh" => "zh-hans",
+	"pt" => "pt-br"
+);
+// docs.dash.org existing translations (on 27th June 2026)
+ $DocsDashTranslations = array(
+	"en" => "en", 
+	"ar" => "ar", 
+	"de" => "de", 
+	"el" => "el",
+	"es" => "es", 
+	"fr" => "fr", 
+	"it" => "it", 
+	"ja" => "ja", 
+	"ko" => "ko", 
+	"pt" => "pt",
+	"ru" => "ru", 
+	"tl" => "tl", 
+	"vi" => "vi", 
+	"zh" => "zh-cn"	
+);
+
 
 date_default_timezone_set("Europe/Paris"); // how to manage that ?
 

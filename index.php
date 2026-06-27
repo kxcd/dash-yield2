@@ -189,6 +189,17 @@ foreach ($langnames as $langcode => $langname)
 if (!file_exists("./languages/" . $lang . ".json"))
 	$lang = "en"; // default if missing JSON
 Carbon::setLocale($lang);
+
+// Dash.org links
+if (in_array($lang, $DashOrgTranslations))
+	$dashorglang = $DashOrgTranslations[$lang];
+else
+	$dashorglang = "en";
+if (in_array($lang, $DocsDashTranslations))
+	$docsdashlang = $DocsDashTranslations[$lang];
+else
+	$docsdashlang = "en";
+		
 $rawJS = file_get_contents("./languages/" . $lang . ".json"); // gets the right JSON language file
 $UItext = json_decode($rawJS, true);
 
@@ -272,7 +283,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	<p class="small">
 		<?php echo str_replace("###", (string) floor((time() - strtotime("2014-01-18 00:00:00")) / (365 * 24 * 60 * 60)), boldify($UItext["proven-crypto"], "Roboto")); ?>
 		<br><?php echo boldify($UItext["servers"], "Roboto"); ?>
-		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/<?php echo $lang;?>/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $lang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
+		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/<?php echo $dashorglang; ?>/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $docsdashlang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
 	</p>
 	<p class="smaller">
 		<br><?php echo str_replace("###", (string)"<span class=\"Roboto-bold\">" . Carbon::now(date_default_timezone_get())->isoFormat('Do MMMM YYYY, HH:mm') . "</span>", $UItext["page-refreshed"]); ?>
@@ -292,7 +303,7 @@ foreach ($collateralvalue as $type => $stuff) {
 	<div class="box boxborder boxsmall">
 		<div class="subtitle subsubtitle"><span class="bold">👋</span> <?php echo $UItext["info-help"]; ?></div>
 		<p class="small">
-			<a href="https://www.dash.org/<?php echo $lang;?>/" target="_blank"><span class="Roboto-bold"><b>Dash.org</b></span></a> | <a href="https://docs.dash.org/<?php echo $lang; ?>/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <a href="https://discordapp.com/invite/PXbUxJB" target="_blank"><span class="Roboto-bold"><b>Dash Discord</b></span></a> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
+			<a href="https://www.dash.org/<?php echo $dashorglang;?>/" target="_blank"><span class="Roboto-bold"><b>Dash.org</b></span></a> | <a href="https://docs.dash.org/<?php echo $docsdashlang; ?>/stable/docs/user/masternodes/" target="_blank">masternodes &amp; Evonodes</a> | <a href="https://discordapp.com/invite/PXbUxJB" target="_blank"><span class="Roboto-bold"><b>Dash Discord</b></span></a> | <a href="https://twitter.com/Dashpay" target="_blank">Dash X</a> | <a href="https://www.dash.org/forum/" target="_blank">Dash forum</a> | <a href="https://reddit.com/r/dashpay/" target="_blank">Dash Reddit</a>
 		</p>
 	</div>
 	
