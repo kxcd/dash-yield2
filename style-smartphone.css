@@ -1,0 +1,185 @@
+/* --- SMARTPHONE MODE ------------------------------ */
+@media screen and (max-width: 768px) {
+
+	body {
+		display: block;
+		background-color: #eee;
+	}
+	table {
+		display: block;
+		border: none;
+	}
+	table tr,
+	table td {
+		display: block;
+		width: 100% !important;
+		padding: 0;
+	}
+	td.stuff {
+		padding: 0px;
+	}
+	div.box {
+		display: block;
+		width: auto;
+		margin: 8px 0;
+		font-size: 15px;
+		line-height: 26px;
+		box-sizing: border-box;
+	}
+	div.box:hover {
+		transform: none;
+		box-shadow: none;
+		background-color: transparent;
+	}
+	div.box.title {
+		text-align: center;
+		float: none;
+		width: 100%;
+		animation: none;
+	}
+	img.logo {
+		width: 160px;
+	}
+	span.subbrand {
+		font-size: 28px;
+		bottom: 22px;
+		padding-left: 6px;
+	}
+	div.banner {
+		width: auto;
+		display: inline-block;
+		font-size: 13px;
+		padding: 3px 12px;
+		rotate: -12deg;
+		margin-bottom: 6px;
+		transform: translateY(-50px);
+	}
+	div.subtitle {
+		position: static;
+		left: auto;
+		top: auto;
+		margin: -10px -12px 10px -12px;
+		border-radius: 8px 8px 0 0;
+		padding: 8px 14px;
+		font-size: 15px;
+		line-height: 22px;
+		white-space: normal;
+	}
+	div.subsubtitle {
+		position: static;
+		left: auto;
+		top: auto;
+		border-radius: 6px 6px 0 0;
+		margin: -10px -12px 10px -12px;
+		padding: 6px 14px;
+		font-size: 14px;
+		line-height: 20px;
+		white-space: normal;
+	}
+	img.tree {
+		display: none;
+	}
+	span.subblock,
+	div.subblock {
+		white-space: normal;
+		display: inline;
+	}
+	div.boxyearnings {
+		text-align: left;
+	}
+	div.right {
+		text-align: right;
+	}
+	span.arrow {
+		display: inline;
+	}
+	span.indentright {
+		margin-left: 20px;
+	}
+	div.bubble {
+		font-size: 12px;
+		padding: 0px 10px;
+		margin: 0 2px;
+		display: inline-block;
+		vertical-align: middle;
+		top: 0;
+	}
+	span.bigger {
+		font-size: 28px;
+	}
+	span.green {
+		font-size: 18px;
+	}
+	span.decimals {
+		font-size: 15px;
+	}
+	div.boxsmall {
+		font-size: 14px;
+		line-height: 22px;
+		padding: 10px 14px;
+		margin: 8px 0;
+	}
+	div.boxborder {
+		border: 2px dotted #008de4;
+		border-radius: 8px;
+		padding: 10px 12px;
+	}
+	select.menu,
+	option.menu {
+		font-size: 15px;
+		max-width: 100%;
+	}
+	input.partial {
+		font-size: 15px;
+		width: calc(5ch + 1.5em);
+	}
+	p.small {
+		font-size: 14px;
+		line-height: 22px;
+		white-space: normal;
+	}
+	p.smaller {
+		font-size: 13px;
+		line-height: 19px;
+		white-space: normal;
+	}
+	span.blue {
+		white-space: normal;
+	}
+	span.peryear {
+		font-size: 12px;
+	}
+	a {
+		white-space: normal;
+	}
+	a.refresh {
+		display: inline-block;
+	}
+	div.box[onclick] {
+		text-align: center;
+		padding: 8px;
+	}
+	div.boxunfold {
+		animation: unfold-mobile 0.8s ease-out 0s;
+	}
+	@keyframes unfold-mobile {
+		0%   { opacity: 0; transform: translateY(-12px) scale(0.97); }
+		100% { opacity: 1; transform: translateY(0)     scale(1);    }
+	}
+	div.title {
+		animation: none;
+	}
+	hr {
+		margin: 10px 0;
+		border-width: 2px;
+	}
+	a.box {
+		font-size: 11px;
+		padding: 0 8px;
+	}
+	span.newline::before {
+		content: "";
+		display: block;
+	}
+
+}
