@@ -2,8 +2,6 @@
 // $development_mode = true;
 // ================================== PARAMETERS ==================================
 require "configs/config.php";
-require "languages/Carbon-3.13.0/autoload.php"; // Carbon, replacement of lacking IntlDateFormatter
-use Carbon\Carbon;
 
 // Functions ===============
 function pretty(float $number, int $decimals):string {
@@ -188,7 +186,7 @@ foreach ($langnames as $langcode => $langname)
 	$langoptions[] = "<option class=\"menu\" value=\"" . $langcode . "\" " . $langselected[$langcode] . ">" . $langname . "</option>";
 if (!file_exists("./languages/" . $lang . ".json"))
 	$lang = "en"; // default if missing JSON
-Carbon::setLocale($lang);
+$fmt = new IntlDateFormatter($lang, IntlDateFormatter::LONG, IntlDateFormatter::SHORT, date_default_timezone_get(), IntlDateFormatter::GREGORIAN, "d MMMM yyyy, HH:mm");
 
 // Dash.org links
 if (in_array($lang, $DashOrgTranslations))
@@ -212,8 +210,8 @@ $currentUSDprice[$fiat] = $data["lastPrices"]["conversion_rates"]["now"][$fiat];
 $past365USDprice[$fiat] = $data["lastPrices"]["conversion_rates"]["one-year-ago"][$fiat];
 $currentprice[$fiat] = round($data["lastPrices"]["USD"]["current"] * $currentUSDprice[$fiat], 2);
 $past365dprice[$fiat] = round($data["lastPrices"]["USD"]["365d"] * $past365USDprice[$fiat], 2);
-$daysago365 = Carbon::createFromTimestamp($data["lastPrices"]["USD"]["time"]["timestamp"] - (365 * 24 * 60 * 60), date_default_timezone_get())->isoFormat('Do MMMM YYYY');
-
+$fmt_date = new IntlDateFormatter($lang, IntlDateFormatter::LONG, IntlDateFormatter::NONE, date_default_timezone_get(), IntlDateFormatter::GREGORIAN, "d MMMM yyyy");
+$daysago365 = $fmt_date->format($data["lastPrices"]["USD"]["time"]["timestamp"] - (365 * 24 * 60 * 60));
 
 // Check if CoinGecko sent the price
 if ((int) $data["lastPrices"]["USD"]["current"] <= 0)
@@ -286,7 +284,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<br><?php echo $UItext["learn-more"]; ?><a href="https://www.dash.org/<?php echo $dashorglang; ?>/" target="_blank"><span class="Roboto-bold"><b>Dash</b></span></a> &amp; <a href="https://docs.dash.org/<?php echo $docsdashlang;?>/stable/docs/user/masternodes/" target="_blank"><span class="Roboto-bold"><b><?php echo $UItext["MN-Evo"]; ?></b></span></a>.
 	</p>
 	<p class="smaller">
-		<br><?php echo str_replace("###", (string)"<span class=\"Roboto-bold\">" . Carbon::now(date_default_timezone_get())->isoFormat('Do MMMM YYYY, HH:mm') . "</span>", $UItext["page-refreshed"]); ?>
+		<br><?php echo str_replace("###", "<span class=\"Roboto-bold\">" . $fmt->format(time()) . "</span>", $UItext["page-refreshed"]); ?>
 		<br><?php echo $UItext["approx"]; ?> <a href="#" data-tippy-content="“Do Your Own Research”.<br>(<?php echo $UItext["DYOR"]; ?>)">DYOR.</a> <?php echo str_replace("###", (string) boldify($UItext["disclaimer"], ""), $UItext["disclaimer-link"]); ?>
 		<br><span class="Roboto-bold"><b><?php echo $UItext["hover-any"]; ?></b></span>
 	</p>
@@ -320,7 +318,7 @@ foreach ($collateralvalue as $type => $stuff) {
 <!-- MARKET PRICE box ================================= -->
 <div class="box boxborder boxunfold">
 	<div class="subtitle"><span class="bold">📊</span>&nbsp;&nbsp;<?php echo $UItext["market-price"]; ?>
-		<div class="bubble" data-tippy-content="<?php echo $UItext["provided-CoinGecko"]; ?>, <?php echo Carbon::createFromTimestamp($data["lastPrices"]["USD"]["time"]["timestamp"], date_default_timezone_get())->isoFormat('Do MMMM YYYY, HH:mm'); ?>.<br>(<?php echo $UItext["provided-Frankfurter"]; ?>, <?php echo Carbon::createFromTimestamp($data["lastPrices"]["conversion_rates"]["now"]["time"]["timestamp"], date_default_timezone_get())->isoFormat('Do MMMM YYYY, HH:mm'); ?>.)">
+		<div class="bubble" data-tippy-content="<?php echo $UItext["provided-CoinGecko"]; ?>, <?php echo $fmt->format($data["lastPrices"]["USD"]["time"]["timestamp"]); ?>.<br>(<?php echo $UItext["provided-Frankfurter"]; ?>, <?php echo $fmt->format($data["lastPrices"]["conversion_rates"]["now"]["time"]["timestamp"]); ?>.)">
 			<?php echo $UItext["today"]; ?>
 			<span class="info">ℹ️</span>
 		</div>
