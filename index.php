@@ -252,7 +252,7 @@ foreach ($collateralvalue as $type => $stuff) {
 		<meta name="twitter:title" content="Dash Yield - masternodes and Evonodes earnings">
 		<meta name="twitter:description" content="Dash Yield is a calculator for Dash masternodes and Evonodes earnings. Enter your settings and get yield estimates in real time.">
 		<meta name="twitter:image" content="https://<?php echo $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; ?>images/favicons/favicon-1200.png">
-		<link rel="icon" href="/favicon.ico">
+		<link rel="icon" href="favicon.ico">
 		<link rel="icon" href="images/favicons/favicon-32.png" sizes="32x32">
 		<link rel="icon" href="images/favicons/favicon-128-new.png" sizes="128x128">
 		<link rel="icon" href="images/favicons/favicon-192-new.png" sizes="192x192">
