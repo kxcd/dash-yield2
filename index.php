@@ -239,17 +239,18 @@ foreach ($collateralvalue as $type => $stuff) {
 		<title>Dash Yield - masternodes &amp; Evonodes earnings</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<meta name="description" content="Dash yield, masternodes and Evonodes earnings calculator.">
+		<meta name="description" content="Dash Yield is a calculator for Dash masternodes and Evonodes earnings. Enter your settings and get yield estimates in real time.">
 		<meta name="theme-color" content="#008de4">
-		<meta property="og:title" content="Dash yield - masternodes and Evonodes earnings">
+		<meta property="og:title" content="Dash Yield - masternodes and Evonodes earnings">
 		<meta property="og:url" content="https://<?php echo $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; ?>">
 		<meta property="og:image" content="https://<?php echo $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; ?>images/favicons/favicon-1200.png">
 		<meta property="og:type" content="website">
-		<meta property="og:description" content="Dash yield, masternodes and Evonodes earnings calculator.">
+		<meta property="og:site_name" content="Dash Yield - masternodes and Evonodes earnings">
+		<meta property="og:description" content="Dash Yield is a calculator for Dash masternodes and Evonodes earnings. Enter your settings and get yield estimates in real time.">
 		<meta property="og:locale" content="en_US">
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:title" content="Dash Yield - masternodes and Evonodes earnings">
-		<meta name="twitter:description" content="Dash yield, masternodes and Evonodes earnings calculator.">
+		<meta name="twitter:description" content="Dash Yield is a calculator for Dash masternodes and Evonodes earnings. Enter your settings and get yield estimates in real time.">
 		<meta name="twitter:image" content="https://<?php echo $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; ?>images/favicons/favicon-1200.png">
 		<link rel="icon" href="/favicon.ico">
 		<link rel="icon" href="images/favicons/favicon-32.png" sizes="32x32">
