@@ -27,6 +27,7 @@ function sharePage() {
 	}
 }
 
+
 // Partial collateral inputs =============
 const refusalCount = {};
 function partial(fieldId) {
@@ -123,3 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	});
 });
+
+
+// Time zone detection =============
+const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; // ex: "UTC", "Europe/Paris"
+document.cookie = `user_tz=${tz}; path=/; SameSite=Lax`;
