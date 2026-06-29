@@ -119,7 +119,19 @@ $DashOrgTranslations = array(
 );
 
 
-date_default_timezone_set("Europe/Paris"); // how to manage that ?
+// Set visitor timezone
+function get_user_timezone(): string {
+	$allowed = timezone_identifiers_list();
+	$tz = $_COOKIE['user_tz'] ?? 'UTC'; // fallback
+	return in_array($tz, $allowed) ? $tz : 'UTC';
+}
+$timezone = get_user_timezone();
+date_default_timezone_set($timezone);
+if ($timezone == "UTC")
+	$timezonemention = " (UTC)";
+else
+	$timezonemention = "";
+
 
 
 // Development mode (FALSE or TRUE)
