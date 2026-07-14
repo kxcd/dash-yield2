@@ -74,7 +74,8 @@ $langnames = array(
 	"fr" => "français", 
 	"es" => "español", 
 	"it" => "italiano", 
-	"pl" => "polski"
+	"pl" => "polski",
+	"ru" => "Русский"
 );
 
 // Dash.org existing translations (on 27th June 2026)
