@@ -645,18 +645,15 @@ foreach ($collateralvalue as $type => $stuff) {
 		});
 	}
 
-	/* Show the intro animation only for a first visit, or after >48 h.
-	   localStorage is deliberately used: a returning visitor on the same
-	   browser/device keeps their visit timestamp. */
+	// Show the intro animation only once each other day
 	const now = Date.now();
-	const previousVisit = Number(localStorage.getItem(VISIT_KEY) || 0);
-
-	const WORK_MODE = false;
-	
-	const shouldShow = WORK_MODE
-		? true
-		: (!previousVisit || (now - previousVisit > FORTY_EIGHT_HOURS));
-	localStorage.setItem(VISIT_KEY, String(now));
+	const lastAnimation = Number(localStorage.getItem(VISIT_KEY) || 0);
+	const shouldShow =
+		!lastAnimation ||
+		(now - lastAnimation > FORTY_EIGHT_HOURS);
+	if (shouldShow) {
+		localStorage.setItem(VISIT_KEY, String(now));
+	}
 
 	const animation = document.getElementById('visitAnimation');
 	if (shouldShow && animation) {
