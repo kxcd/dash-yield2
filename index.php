@@ -598,7 +598,49 @@ foreach ($collateralvalue as $type => $stuff) {
 	</section>
 
 </main>
+<script>
+// More theme management and some PHP injection!
+(function () {
+	'use strict';
 
+	const THEME_KEY = 'dash-yield-theme';
+	const root = document.documentElement;
+	const toggle = document.getElementById('themeToggle');
+	const toggleIcon = toggle ? toggle.querySelector('.theme-icon') : null;
+	const toggleText = toggle ? toggle.querySelector('.theme-toggle-text') : null;
+
+	function setTheme(theme, persist) {
+		const isDark = theme === 'dark';
+		root.dataset.theme = isDark ? 'dark' : 'light';
+
+		if (persist) {
+			localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+		}
+
+		if (toggle) {
+			toggle.setAttribute('aria-pressed', String(isDark));
+			toggle.setAttribute(
+				'aria-label',
+				isDark ? '<?php echo $UItext["switchlightmode"]; ?>' : '<?php echo $UItext["switchdarkmode"]; ?>'
+			);
+		}
+		if (toggleIcon) toggleIcon.textContent = isDark ? '☀' : '☾';
+		if (toggleText) toggleText.textContent = isDark ? '<?php echo $UItext["daymode"]; ?>' : '<?php echo $UItext["nightmode"]; ?>';
+	}
+
+	/* The inline script in <head> already selected the initial theme:
+	   explicit visitor choice > OS preference > light. */
+	setTheme(root.dataset.theme || 'light', false);
+
+	if (toggle) {
+		toggle.addEventListener('click', function () {
+			setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true);
+		});
+	}console.log(toggle);
+})();
+
+
+</script>
 <script>
 	tippy('[data-tippy-content]', { maxWidth: 300, zIndex: 30000, placement: 'top', allowHTML: true });
 </script>
