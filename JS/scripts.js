@@ -105,20 +105,23 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (!input)
 			return;
 		const stepValue = Number(input.placeholder); // 1000 for MN, 4000 for Evo
+		const subStep = (id === 'coll-MN') ? 125 : stepValue; // only MNs
 		let lastValue = Number(input.value);
 		// 1 : up/down arrow on keyboard
 		input.addEventListener('keydown', (e) => {
 			let currentValue = Number(input.value) || 0;
 			if (e.key === 'ArrowUp') {
 				e.preventDefault();
-				let newValue = Math.ceil((currentValue + 0.1) / stepValue) * stepValue;
+				const increment = (currentValue < stepValue) ? subStep : stepValue;
+				let newValue = Math.ceil((currentValue + 0.1) / increment) * increment;
 				input.value = newValue;
 				input.dispatchEvent(new Event('input'));
 			} else if (e.key === 'ArrowDown') {
 				e.preventDefault();
-				let newValue = Math.floor((currentValue - 0.1) / stepValue) * stepValue;
+				const increment = (currentValue <= stepValue) ? subStep : stepValue;
+				let newValue = Math.floor((currentValue - 0.1) / increment) * increment;
 				input.value = Math.max(Number(input.min) || 1, newValue);
-				
+
 				input.dispatchEvent(new Event('input'));
 			}
 		});
@@ -127,11 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (e.inputType !== 'insertText' && e.inputType !== 'deleteContentBackward') {
 				let currentValue = Number(input.value) || 0;
 				if (currentValue > lastValue) {
-					let newValue = Math.ceil((lastValue + 0.1) / stepValue) * stepValue;
+					const increment = (lastValue < stepValue) ? subStep : stepValue;
+					let newValue = Math.ceil((lastValue + 0.1) / increment) * increment;
 					input.value = newValue;
 				} 
 				else if (currentValue < lastValue) {
-					let newValue = Math.floor((lastValue - 0.1) / stepValue) * stepValue;
+					const increment = (lastValue <= stepValue) ? subStep : stepValue;
+					let newValue = Math.floor((lastValue - 0.1) / increment) * increment;
 					input.value = Math.max(Number(input.min) || 1, newValue);
 				}
 				partial(id.replace('coll-', ''), timescale); 
